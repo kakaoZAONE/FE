@@ -14,14 +14,19 @@ if [ -z "${FORCE:-}" ] && [ -s "$OUT/Pretendard-Regular.otf" ] && [ -s "$OUT/Not
   exit 0
 fi
 
-python3 -c "import fontTools" 2>/dev/null || python3 -m pip install -q --user fonttools \
-  || { python3 -m ensurepip --user && python3 -m pip install -q --user fonttools; }
-
 WORK=$(mktemp -d)
 trap 'rm -rf "$WORK"' EXIT
 
+# fonttools 없으면 임시 venv에 설치 (시스템 python은 건드리지 않음)
+PY=python3
+if ! python3 -c "import fontTools" 2>/dev/null; then
+  python3 -m venv "$WORK/venv"
+  "$WORK/venv/bin/pip" install -q fonttools
+  PY="$WORK/venv/bin/python"
+fi
+
 # 1) 사용 글자 목록
-python3 - "$WORK/chars.txt" <<'PY'
+"$PY" - "$WORK/chars.txt" <<'PY'
 import glob, sys
 chars = set()
 for f in glob.glob('lib/**/*.dart', recursive=True):
@@ -38,7 +43,7 @@ curl -fsSL -o "$WORK/SUITE-Bold.ttf" \
 curl -fsSL -o "$WORK/NotoSansKR.ttf" \
   "https://raw.githubusercontent.com/google/fonts/main/ofl/notosanskr/NotoSansKR%5Bwght%5D.ttf"
 
-sub() { python3 -m fontTools.subset "$1" --text-file="$WORK/chars.txt" --layout-features='*' --output-file="$2"; }
+sub() { "$PY" -m fontTools.subset "$1" --text-file="$WORK/chars.txt" --layout-features='*' --output-file="$2"; }
 
 # 3) 서브셋
 for w in Regular Medium SemiBold Bold; do
@@ -47,7 +52,7 @@ done
 sub "$WORK/SUITE-Bold.ttf" "$OUT/SUITE-Bold.ttf"
 for pair in 400:Regular 500:Medium 700:Bold 900:Black; do
   wght=${pair%%:*}; name=${pair##*:}
-  python3 -m fontTools.varLib.instancer "$WORK/NotoSansKR.ttf" "wght=$wght" -q -o "$WORK/Noto-$name.ttf"
+  "$PY" -m fontTools.varLib.instancer "$WORK/NotoSansKR.ttf" "wght=$wght" -q -o "$WORK/Noto-$name.ttf"
   sub "$WORK/Noto-$name.ttf" "$OUT/NotoSansKR-$name.ttf"
 done
 
