@@ -14,6 +14,9 @@ void main() {
     expect(find.text('소재별 결과를 먼저 확인해 보세요'), findsOneWidget);
     expect(find.text('원래 쓰임에서는 떠올리기 어려운 활용을 제안합니다'), findsOneWidget);
     expect(find.text('결과가 마음에 드신다면'), findsOneWidget);
+
+    // 히어로 슬라이드 타이머 정리
+    await tester.pumpWidget(const SizedBox());
   });
 
   testWidgets('로그인을 누르면 로그인 창이 뜨고 나가기로 닫힌다', (tester) async {
@@ -31,5 +34,8 @@ void main() {
     await tester.tap(find.text('나가기'));
     await tester.pumpAndSettle();
     expect(find.text('기업명'), findsNothing);
+
+    // 히어로 슬라이드 타이머 정리
+    await tester.pumpWidget(const SizedBox());
   });
 }
