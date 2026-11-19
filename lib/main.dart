@@ -1,5 +1,7 @@
-
 import 'package:flutter/material.dart';
+
+import 'pages/home/home_page.dart';
+import 'theme/app_text_styles.dart';
 
 void main() {
   runApp(const MyApp());
@@ -13,9 +15,11 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: '자원도감',
       debugShowCheckedModeBanner: false,
-      home: const Scaffold(
-        body: SizedBox.shrink(),
+      theme: ThemeData(
+        fontFamily: AppFonts.pretendard,
+        scaffoldBackgroundColor: Colors.white,
       ),
+      home: const HomePage(),
     );
   }
 }
