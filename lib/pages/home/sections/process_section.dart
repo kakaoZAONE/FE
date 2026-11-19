@@ -3,10 +3,12 @@ import 'package:flutter/material.dart';
 import '../../../theme/app_colors.dart';
 import '../../../theme/app_text_styles.dart';
 import '../../../widgets/notch_clipper.dart';
+import '../../../widgets/responsive.dart';
 import '../home_assets.dart';
 import 'section_heading.dart';
 
 /// "자원도감은 이런 과정을 거칩니다" — 01~03 카드
+/// 데스크톱 3열 / 태블릿 2열 / 모바일 1열
 class ProcessSection extends StatelessWidget {
   const ProcessSection({super.key});
 
@@ -30,6 +32,8 @@ class ProcessSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final columns = Responsive.value(context, desktop: 3, tablet: 2, mobile: 1);
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -37,22 +41,18 @@ class ProcessSection extends StatelessWidget {
           eyebrow: '자원도감은 어떤 서비스인가요?',
           title: '자원도감은 이런 과정을 거칩니다',
         ),
-        const SizedBox(height: 40),
+        SizedBox(height: Responsive.value<double>(context, desktop: 40, mobile: 24)),
         Container(
           decoration: const BoxDecoration(
             border: Border(bottom: BorderSide(color: AppColors.gray500)),
           ),
-          child: Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
+          child: ResponsiveGrid(
+            columns: columns,
+            gap: 20,
+            runGap: 0,
             children: [
-              for (var i = 0; i < _steps.length; i++) ...[
-                if (i > 0) const SizedBox(width: 20),
-                _ProcessCard(
-                  number: _steps[i].$1,
-                  title: _steps[i].$2,
-                  body: _steps[i].$3,
-                ),
-              ],
+              for (final step in _steps)
+                _ProcessCard(number: step.$1, title: step.$2, body: step.$3),
             ],
           ),
         ),
@@ -74,82 +74,82 @@ class _ProcessCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
-      width: 427,
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: [
-          ClipPath(
-            clipper: NotchClipper(
-              notchStart: (s) => s.width * 0.686,
-              notchEnd: (s) => s.width * 0.808,
-              notchDepth: 66,
-            ),
-            child: SizedBox(
-              height: 428,
-              child: Stack(
-                fit: StackFit.expand,
-                children: [
-                  Image.asset(HomeAssets.processCard, fit: BoxFit.cover),
-                  const DecoratedBox(
-                    decoration: BoxDecoration(
-                      gradient: LinearGradient(
-                        begin: Alignment.topCenter,
-                        end: Alignment.bottomCenter,
-                        colors: [
-                          Color(0x99000000),
-                          Color(0x80000000),
-                          Color(0x38000000),
-                          Color(0x00000000),
-                        ],
-                        stops: [0, 0.133, 0.333, 0.613],
-                      ),
-                    ),
-                  ),
-                  Positioned(
-                    left: 25,
-                    top: 25,
-                    child: Container(
-                      padding: const EdgeInsets.all(10),
-                      decoration: BoxDecoration(
-                        border: Border.all(color: AppColors.screen),
-                      ),
-                      child: Text(
-                        number,
-                        style: const TextStyle(
-                          fontFamily: AppFonts.pretendard,
-                          fontWeight: FontWeight.w400,
-                          fontSize: 24,
-                          height: 25 / 24,
-                          color: AppColors.screen,
-                        ),
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ),
+    final isMobile = Responsive.of(context) == ScreenSize.mobile;
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        ClipPath(
+          clipper: NotchClipper(
+            notchStart: (s) => s.width * 0.686,
+            notchEnd: (s) => s.width * 0.808,
+            notchDepth: 66,
           ),
-          Container(
-            padding: const EdgeInsets.fromLTRB(10, 20, 10, 50),
-            decoration: const BoxDecoration(
-              color: AppColors.screen,
-              border: Border(left: BorderSide(color: AppColors.gray300)),
-            ),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
+          child: AspectRatio(
+            // 피그마 427 x 428
+            aspectRatio: 427 / 428,
+            child: Stack(
+              fit: StackFit.expand,
               children: [
-                Text(title, style: AppTextStyles.title24),
-                const SizedBox(height: 15),
-                Text(
-                  body,
-                  style: AppTextStyles.body15.copyWith(height: 20 / 15),
+                Image.asset(HomeAssets.processCard, fit: BoxFit.cover),
+                const DecoratedBox(
+                  decoration: BoxDecoration(
+                    gradient: LinearGradient(
+                      begin: Alignment.topCenter,
+                      end: Alignment.bottomCenter,
+                      colors: [
+                        Color(0x99000000),
+                        Color(0x80000000),
+                        Color(0x38000000),
+                        Color(0x00000000),
+                      ],
+                      stops: [0, 0.133, 0.333, 0.613],
+                    ),
+                  ),
+                ),
+                Positioned(
+                  left: 25,
+                  top: 25,
+                  child: Container(
+                    padding: const EdgeInsets.all(10),
+                    decoration: BoxDecoration(
+                      border: Border.all(color: AppColors.screen),
+                    ),
+                    child: Text(
+                      number,
+                      style: const TextStyle(
+                        fontFamily: AppFonts.pretendard,
+                        fontWeight: FontWeight.w400,
+                        fontSize: 24,
+                        height: 25 / 24,
+                        color: AppColors.screen,
+                      ),
+                    ),
+                  ),
                 ),
               ],
             ),
           ),
-        ],
-      ),
+        ),
+        Container(
+          padding: EdgeInsets.fromLTRB(10, 20, 10, isMobile ? 32 : 50),
+          decoration: const BoxDecoration(
+            color: AppColors.screen,
+            border: Border(left: BorderSide(color: AppColors.gray300)),
+          ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                title,
+                style: AppTextStyles.title24.copyWith(fontSize: isMobile ? 20 : 24),
+              ),
+              const SizedBox(height: 15),
+              Text(body, style: AppTextStyles.body15.copyWith(height: 20 / 15)),
+            ],
+          ),
+        ),
+      ],
     );
   }
 }

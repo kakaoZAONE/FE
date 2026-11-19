@@ -4,9 +4,11 @@ import '../../../theme/app_colors.dart';
 import '../../../theme/app_text_styles.dart';
 import '../../../widgets/app_button.dart';
 import '../../../widgets/design_width.dart';
+import '../../../widgets/responsive.dart';
 import '../home_assets.dart';
 
 /// Figma `header` — 높이 110, 좌우 60, 하단 보더 (보더는 화면 끝까지)
+/// 태블릿·모바일에서는 메뉴 링크를 숨긴다.
 class HomeHeader extends StatelessWidget {
   const HomeHeader({super.key});
 
@@ -14,6 +16,9 @@ class HomeHeader extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final size = Responsive.of(context);
+    final showNav = size == ScreenSize.desktop;
+
     return Container(
       decoration: const BoxDecoration(
         color: Colors.white,
@@ -21,7 +26,10 @@ class HomeHeader extends StatelessWidget {
       ),
       child: DesignWidth(
         child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 60, vertical: 30),
+          padding: EdgeInsets.symmetric(
+            horizontal: Responsive.pagePadding(context),
+            vertical: Responsive.value<double>(context, desktop: 30, mobile: 16),
+          ),
           child: Row(
             children: [
               SizedBox(
@@ -32,10 +40,12 @@ class HomeHeader extends StatelessWidget {
                   child: Image.asset(HomeAssets.logo, width: 91, height: 24),
                 ),
               ),
-              const SizedBox(width: 32),
-              for (var i = 0; i < _navItems.length; i++) ...[
-                if (i > 0) const SizedBox(width: 30),
-                _NavLink(label: _navItems[i]),
+              if (showNav) ...[
+                const SizedBox(width: 32),
+                for (var i = 0; i < _navItems.length; i++) ...[
+                  if (i > 0) const SizedBox(width: 30),
+                  _NavLink(label: _navItems[i]),
+                ],
               ],
               const Spacer(),
               const _NavLink(
@@ -47,8 +57,11 @@ class HomeHeader extends StatelessWidget {
                   color: AppColors.gray600,
                 ),
               ),
-              const SizedBox(width: 24),
-              AppButton(label: '내 소재 등록하기', onPressed: () {}),
+              SizedBox(width: size == ScreenSize.mobile ? 16 : 24),
+              AppButton(
+                label: size == ScreenSize.mobile ? '소재 등록' : '내 소재 등록하기',
+                onPressed: () {},
+              ),
             ],
           ),
         ),
