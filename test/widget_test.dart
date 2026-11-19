@@ -15,4 +15,21 @@ void main() {
     expect(find.text('원래 쓰임에서는 떠올리기 어려운 활용을 제안합니다'), findsOneWidget);
     expect(find.text('결과가 마음에 드신다면'), findsOneWidget);
   });
+
+  testWidgets('로그인을 누르면 로그인 창이 뜨고 나가기로 닫힌다', (tester) async {
+    tester.view.physicalSize = const Size(1440, 4000);
+    tester.view.devicePixelRatio = 1;
+    addTearDown(tester.view.reset);
+
+    await tester.pumpWidget(const MyApp());
+    await tester.tap(find.text('로그인'));
+    await tester.pumpAndSettle();
+
+    expect(find.text('기업명'), findsOneWidget);
+    expect(find.text('비밀번호'), findsOneWidget);
+
+    await tester.tap(find.text('나가기'));
+    await tester.pumpAndSettle();
+    expect(find.text('기업명'), findsNothing);
+  });
 }

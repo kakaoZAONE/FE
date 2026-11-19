@@ -4,11 +4,13 @@ import '../../../theme/app_colors.dart';
 import '../../../theme/app_text_styles.dart';
 import '../../../widgets/app_button.dart';
 import '../../../widgets/design_width.dart';
+import '../../../widgets/login_dialog.dart';
 import '../../../widgets/responsive.dart';
 import '../home_assets.dart';
 
 /// Figma `header` — 높이 110, 좌우 60, 하단 보더 (보더는 화면 끝까지)
 /// 태블릿·모바일에서는 메뉴 링크를 숨긴다.
+/// 로고 → 메인 홈(맨 위로), 로그인 → 로그인 작은 창
 class HomeHeader extends StatelessWidget {
   const HomeHeader({super.key});
 
@@ -32,12 +34,22 @@ class HomeHeader extends StatelessWidget {
           ),
           child: Row(
             children: [
-              SizedBox(
-                width: 94,
-                height: 36,
-                child: Align(
-                  alignment: Alignment.centerLeft,
-                  child: Image.asset(HomeAssets.logo, width: 91, height: 24),
+              MouseRegion(
+                cursor: SystemMouseCursors.click,
+                child: GestureDetector(
+                  onTap: () => _goHome(context),
+                  child: SizedBox(
+                    width: 94,
+                    height: 36,
+                    child: Align(
+                      alignment: Alignment.centerLeft,
+                      child: Semantics(
+                        label: '자원도감 홈',
+                        button: true,
+                        child: Image.asset(HomeAssets.logo, width: 91, height: 24),
+                      ),
+                    ),
+                  ),
                 ),
               ),
               if (showNav) ...[
@@ -48,9 +60,10 @@ class HomeHeader extends StatelessWidget {
                 ],
               ],
               const Spacer(),
-              const _NavLink(
+              _NavLink(
                 label: '로그인',
-                style: TextStyle(
+                onTap: () => showLoginDialog(context),
+                style: const TextStyle(
                   fontFamily: AppFonts.pretendard,
                   fontWeight: FontWeight.w500,
                   fontSize: 15,
@@ -68,13 +81,31 @@ class HomeHeader extends StatelessWidget {
       ),
     );
   }
+
+  /// 메인 홈으로: 다른 화면이 쌓여 있으면 첫 화면까지 닫고, 맨 위로 스크롤
+  static void _goHome(BuildContext context) {
+    final navigator = Navigator.of(context);
+    if (navigator.canPop()) {
+      navigator.popUntil((route) => route.isFirst);
+      return;
+    }
+    final scroll = PrimaryScrollController.maybeOf(context);
+    if (scroll != null && scroll.hasClients) {
+      scroll.animateTo(
+        0,
+        duration: const Duration(milliseconds: 400),
+        curve: Curves.easeOutCubic,
+      );
+    }
+  }
 }
 
 class _NavLink extends StatefulWidget {
-  const _NavLink({required this.label, this.style});
+  const _NavLink({required this.label, this.style, this.onTap});
 
   final String label;
   final TextStyle? style;
+  final VoidCallback? onTap;
 
   @override
   State<_NavLink> createState() => _NavLinkState();
@@ -92,7 +123,7 @@ class _NavLinkState extends State<_NavLink> {
       onEnter: (_) => setState(() => _hovered = true),
       onExit: (_) => setState(() => _hovered = false),
       child: GestureDetector(
-        onTap: () {},
+        onTap: widget.onTap ?? () {},
         child: Text(
           widget.label,
           style: base.copyWith(color: _hovered ? AppColors.gray900 : null),

@@ -31,6 +31,8 @@ class HomePage extends StatelessWidget {
     return Scaffold(
       backgroundColor: Colors.white,
       body: SingleChildScrollView(
+        // 로고 누르면 맨 위로 올라가도록 PrimaryScrollController 사용
+        primary: true,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
