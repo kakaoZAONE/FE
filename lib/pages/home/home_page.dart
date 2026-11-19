@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../../widgets/design_width.dart';
 import 'sections/contact_section.dart';
 import 'sections/hero_section.dart';
 import 'sections/home_footer.dart';
@@ -8,13 +9,12 @@ import 'sections/process_section.dart';
 import 'sections/sample_section.dart';
 import 'sections/scene_section.dart';
 
-/// Figma `1.1 main` (1440 x 3994)
+/// Figma `1.1 main`
 ///
-/// 1440px 기준 디자인. 창이 1440보다 좁으면 비율 그대로 축소해서 보여준다.
+/// - 창이 1440 이상: 헤더·히어로·푸터 배경은 화면 끝까지, 내용은 가운데 1440
+/// - 창이 1440 미만: 1440 기준 화면을 비율 그대로 축소
 class HomePage extends StatelessWidget {
   const HomePage({super.key});
-
-  static const designWidth = 1440.0;
 
   @override
   Widget build(BuildContext context) {
@@ -23,19 +23,22 @@ class HomePage extends StatelessWidget {
       body: LayoutBuilder(
         builder: (context, constraints) {
           final viewport = constraints.maxWidth;
-          final page = SizedBox(width: designWidth, child: const _HomeContent());
+
+          if (viewport >= kDesignWidth) {
+            return SingleChildScrollView(
+              child: SizedBox(width: viewport, child: const _HomeContent()),
+            );
+          }
 
           return SingleChildScrollView(
-            child: viewport >= designWidth
-                ? Center(child: page)
-                : SizedBox(
-                    width: viewport,
-                    child: FittedBox(
-                      fit: BoxFit.fitWidth,
-                      alignment: Alignment.topCenter,
-                      child: page,
-                    ),
-                  ),
+            child: SizedBox(
+              width: viewport,
+              child: const FittedBox(
+                fit: BoxFit.fitWidth,
+                alignment: Alignment.topCenter,
+                child: SizedBox(width: kDesignWidth, child: _HomeContent()),
+              ),
+            ),
           );
         },
       ),
@@ -55,22 +58,24 @@ class _HomeContent extends StatelessWidget {
         HomeHeader(),
         HeroSection(),
         // Figma `Frame 114` — 바깥 10 + 위아래 40
-        Padding(
-          padding: EdgeInsets.fromLTRB(10, 50, 10, 50),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              _Section(child: ProcessSection()),
-              SizedBox(height: 40),
-              _Section(child: SampleSection()),
-              SizedBox(height: 40),
-              _Section(child: SceneSection()),
-              SizedBox(height: 40),
-              Center(
-                child: SizedBox(width: 1320, child: ContactSection()),
-              ),
-            ],
+        DesignWidth(
+          child: Padding(
+            padding: EdgeInsets.fromLTRB(10, 50, 10, 50),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                _Section(child: ProcessSection()),
+                SizedBox(height: 40),
+                _Section(child: SampleSection()),
+                SizedBox(height: 40),
+                _Section(child: SceneSection()),
+                SizedBox(height: 40),
+                Center(
+                  child: SizedBox(width: 1320, child: ContactSection()),
+                ),
+              ],
+            ),
           ),
         ),
         // Figma 프레임에서 Contact 아래 ~ Footer 사이 여백
@@ -81,7 +86,7 @@ class _HomeContent extends StatelessWidget {
   }
 }
 
-/// 섹션 공통 패딩 60
+/// 섹션 공통 패딩 (바깥 10 + 50 = 화면 기준 60)
 class _Section extends StatelessWidget {
   const _Section({required this.child});
 

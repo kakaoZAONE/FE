@@ -3,9 +3,10 @@ import 'package:flutter/material.dart';
 import '../../../theme/app_colors.dart';
 import '../../../theme/app_text_styles.dart';
 import '../../../widgets/app_button.dart';
+import '../../../widgets/design_width.dart';
 import '../home_assets.dart';
 
-/// Figma `hero` — 높이 680, 좌우 80, 상하 100, 하단 정렬
+/// Figma `hero` — 높이 680, 이미지는 화면 끝까지, 글자는 1440 안에서 좌우 80·상하 100
 class HeroSection extends StatelessWidget {
   const HeroSection({super.key});
 
@@ -26,39 +27,41 @@ class HeroSection extends StatelessWidget {
               ),
             ),
           ),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 80, vertical: 100),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.end,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  '기업 소재의 놀이 가능성 탐색',
-                  style: AppTextStyles.title18.copyWith(color: AppColors.screen),
-                ),
-                const SizedBox(height: 10),
-                const Text(
-                  '우리 회사의 소재로\n어떤 놀이가 가능할까요?',
-                  style: AppTextStyles.heroTitle,
-                ),
-                const SizedBox(height: 20),
-                Text(
-                  '소재 사진을 등록하면 AI가 특징을 분석하고 원래 쓰임을 넘어서는 놀이 확장 3가지를 제안합니다.',
-                  style: AppTextStyles.title18.copyWith(color: AppColors.gray50),
-                ),
-                const SizedBox(height: 20),
-                Row(
-                  children: [
-                    AppButton(label: '내 소재 등록하기', onPressed: () {}),
-                    const SizedBox(width: 30),
-                    AppButton(
-                      label: '샘플로 미리보기',
-                      variant: AppButtonVariant.light,
-                      onPressed: () {},
-                    ),
-                  ],
-                ),
-              ],
+          DesignWidth(
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 80, vertical: 100),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.end,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    '기업 소재의 놀이 가능성 탐색',
+                    style: AppTextStyles.title18.copyWith(color: AppColors.screen),
+                  ),
+                  const SizedBox(height: 10),
+                  const Text(
+                    '우리 회사의 소재로\n어떤 놀이가 가능할까요?',
+                    style: AppTextStyles.heroTitle,
+                  ),
+                  const SizedBox(height: 20),
+                  Text(
+                    '소재 사진을 등록하면 AI가 특징을 분석하고 원래 쓰임을 넘어서는 놀이 확장 3가지를 제안합니다.',
+                    style: AppTextStyles.title18.copyWith(color: AppColors.gray50),
+                  ),
+                  const SizedBox(height: 20),
+                  Row(
+                    children: [
+                      AppButton(label: '내 소재 등록하기', onPressed: () {}),
+                      const SizedBox(width: 30),
+                      AppButton(
+                        label: '샘플로 미리보기',
+                        variant: AppButtonVariant.light,
+                        onPressed: () {},
+                      ),
+                    ],
+                  ),
+                ],
+              ),
             ),
           ),
         ],
