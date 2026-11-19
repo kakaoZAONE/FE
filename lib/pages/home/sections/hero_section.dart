@@ -4,6 +4,7 @@ import '../../../theme/app_colors.dart';
 import '../../../theme/app_text_styles.dart';
 import '../../../widgets/app_button.dart';
 import '../../../widgets/design_width.dart';
+import '../../../widgets/fade_slideshow.dart';
 import '../../../widgets/responsive.dart';
 import '../home_assets.dart';
 
@@ -50,7 +51,8 @@ class HeroSection extends StatelessWidget {
       child: Stack(
         fit: StackFit.expand,
         children: [
-          Image.asset(HomeAssets.hero, fit: BoxFit.cover),
+          // 원본 + AI 시안 3장, 5초마다 페이드 전환
+          const FadeSlideshow(images: HomeAssets.heroSlides),
           const DecoratedBox(
             decoration: BoxDecoration(
               gradient: LinearGradient(

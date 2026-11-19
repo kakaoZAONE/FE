@@ -38,6 +38,9 @@ sample_cushion_3.png           fbd98870-8294-4dc0-ba12-e6cfdbce7c9b.png
 scene_explore.png              dbd1970d-831c-4585-b1e5-9ba50d7de175.png
 scene_transform.png            54b05697-b531-4b7e-8961-1997988c3479.png
 scene_combine.png              33dbe0c0-bf6b-4248-8f45-55d9d22a52bc.png
+hero_ai_1.png                  499225f9-a36f-498b-b2e9-ad66319f7598.png
+hero_ai_2.png                  2f3a9412-6ece-4349-8e37-379454342469.png
+hero_ai_3.png                  28c4b939-4ac2-40b4-bd31-bd6c56213955.png
 EOF
 
 echo "done: $(ls "$DIR" | wc -l) files"

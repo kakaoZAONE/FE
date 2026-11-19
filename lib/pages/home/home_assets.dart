@@ -4,6 +4,14 @@ abstract final class HomeAssets {
 
   static const logo = '$_dir/logo.png';
   static const hero = '$_dir/hero.png';
+
+  // 히어로 슬라이드 (원본 + AI 생성 시안 3장, '자원도감 히어로 AI 시안' 파일)
+  static const heroSlides = [
+    hero,
+    '$_dir/hero_ai_1.png',
+    '$_dir/hero_ai_2.png',
+    '$_dir/hero_ai_3.png',
+  ];
   static const processCard = '$_dir/process_card.png';
 
   // 소재별 결과 카드: [메인, 썸네일1, 썸네일2, 썸네일3]
