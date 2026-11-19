@@ -54,33 +54,27 @@ class _HomeContent extends StatelessWidget {
       children: [
         HomeHeader(),
         HeroSection(),
-        // Figma `Frame 114` — 높이 2766, 내용 세로 가운데 정렬
-        SizedBox(
-          height: 2766,
-          child: Padding(
-            padding: EdgeInsets.all(10),
-            child: Center(
-              child: Padding(
-                padding: EdgeInsets.symmetric(vertical: 40),
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
-                  children: [
-                    _Section(child: ProcessSection()),
-                    SizedBox(height: 40),
-                    _Section(child: SampleSection()),
-                    SizedBox(height: 40),
-                    _Section(child: SceneSection()),
-                    SizedBox(height: 40),
-                    Center(
-                      child: SizedBox(width: 1320, child: ContactSection()),
-                    ),
-                  ],
-                ),
+        // Figma `Frame 114` — 바깥 10 + 위아래 40
+        Padding(
+          padding: EdgeInsets.fromLTRB(10, 50, 10, 50),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              _Section(child: ProcessSection()),
+              SizedBox(height: 40),
+              _Section(child: SampleSection()),
+              SizedBox(height: 40),
+              _Section(child: SceneSection()),
+              SizedBox(height: 40),
+              Center(
+                child: SizedBox(width: 1320, child: ContactSection()),
               ),
-            ),
+            ],
           ),
         ),
+        // Figma 프레임에서 Contact 아래 ~ Footer 사이 여백
+        SizedBox(height: 288),
         HomeFooter(),
       ],
     );

@@ -43,14 +43,19 @@ class _AppButtonState extends State<AppButton> {
           child: Container(
             height: 50,
             padding: const EdgeInsets.symmetric(horizontal: 20),
-            alignment: Alignment.center,
             decoration: BoxDecoration(
               color: bg,
               borderRadius: BorderRadius.circular(2),
             ),
-            child: Text(
-              widget.label,
-              style: AppTextStyles.title18.copyWith(color: fg),
+            // 내용 너비만큼만 차지 (부모가 넓어도 늘어나지 않음)
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Text(
+                  widget.label,
+                  style: AppTextStyles.title18.copyWith(color: fg),
+                ),
+              ],
             ),
           ),
         ),
