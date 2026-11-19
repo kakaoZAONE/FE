@@ -38,9 +38,9 @@ sample_cushion_3.png           fbd98870-8294-4dc0-ba12-e6cfdbce7c9b.png
 scene_explore.png              dbd1970d-831c-4585-b1e5-9ba50d7de175.png
 scene_transform.png            54b05697-b531-4b7e-8961-1997988c3479.png
 scene_combine.png              33dbe0c0-bf6b-4248-8f45-55d9d22a52bc.png
-hero_ai_1.png                  4f128b13-8cc8-4865-ab00-392cf770caae.png
-hero_ai_2.png                  d7efdb80-da0f-4bc1-aa89-46f9035a99b6.png
-hero_ai_3.png                  4241da7e-edd5-44a4-9a5c-76009a9a5d8a.png
+hero_ai_1.png                  4b3d09de-36f7-47ee-bb56-83977eaf6e9a.png
+hero_ai_2.png                  d3e3a28f-21dc-4168-b912-80c47b53f468.png
+hero_ai_3.png                  ca507f2b-c093-4c9e-9bcf-7009662112de.png
 EOF
 
 echo "done: $(ls "$DIR" | wc -l) files"
