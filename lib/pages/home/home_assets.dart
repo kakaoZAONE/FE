@@ -5,7 +5,7 @@ abstract final class HomeAssets {
   static const logo = '$_dir/logo.png';
   static const hero = '$_dir/hero.png';
 
-  // 히어로 슬라이드 (원본 + AI 생성 시안 3장, '자원도감 히어로 AI 시안' 파일)
+  // 히어로 슬라이드: 원본 + AI 시안 3장 (1 지퍼 자투리, 2 포장 완충재, 3 병뚜껑)
   static const heroSlides = [
     hero,
     '$_dir/hero_ai_1.png',
