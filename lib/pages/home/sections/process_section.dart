@@ -18,11 +18,7 @@ class ProcessSection extends StatelessWidget {
       '번거로운 입력대신 소재 사진으로',
       '사진 한 장이면 자원도감을 시작할 수 있어요\n크기나 재질 같은 정보는 아는 만큼만 입력해주세요!',
     ),
-    (
-      '02',
-      '정확한 결과를 위해 검토해주세요',
-      'AI가 사진에서 읽은 특징을 확인하고\n실제와 다르면 직접 수정할 수 있어요!',
-    ),
+    ('02', '정확한 결과를 위해 검토해주세요', 'AI가 사진에서 읽은 특징을 확인하고\n실제와 다르면 직접 수정할 수 있어요!'),
     (
       '03',
       '더욱 확장된 놀이 장면 제안',
@@ -41,7 +37,9 @@ class ProcessSection extends StatelessWidget {
           eyebrow: '자원도감은 어떤 서비스인가요?',
           title: '자원도감은 이런 과정을 거칩니다',
         ),
-        SizedBox(height: Responsive.value<double>(context, desktop: 40, mobile: 24)),
+        SizedBox(
+          height: Responsive.value<double>(context, desktop: 40, mobile: 24),
+        ),
         Container(
           decoration: const BoxDecoration(
             border: Border(bottom: BorderSide(color: AppColors.gray500)),
@@ -80,10 +78,11 @@ class _ProcessCard extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
         ClipPath(
+          // 피그마 마스크 path: M0 0 H294.938 L347.763 67.1748 H427 (폭 427 기준)
           clipper: NotchClipper(
-            notchStart: (s) => s.width * 0.686,
-            notchEnd: (s) => s.width * 0.808,
-            notchDepth: 66,
+            notchStart: (s) => s.width * 294.938 / 427,
+            notchEnd: (s) => s.width * 347.763 / 427,
+            notchDepth: 67.1748,
           ),
           child: AspectRatio(
             // 피그마 427 x 428
@@ -142,7 +141,9 @@ class _ProcessCard extends StatelessWidget {
             children: [
               Text(
                 title,
-                style: AppTextStyles.title24.copyWith(fontSize: isMobile ? 20 : 24),
+                style: AppTextStyles.title24.copyWith(
+                  fontSize: isMobile ? 20 : 24,
+                ),
               ),
               const SizedBox(height: 15),
               Text(body, style: AppTextStyles.body15.copyWith(height: 20 / 15)),

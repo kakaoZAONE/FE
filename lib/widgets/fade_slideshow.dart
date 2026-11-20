@@ -52,10 +52,8 @@ class _FadeSlideshowState extends State<FadeSlideshow> {
   Widget build(BuildContext context) {
     return AnimatedSwitcher(
       duration: widget.fadeDuration,
-      layoutBuilder: (current, previous) => Stack(
-        fit: StackFit.expand,
-        children: [...previous, if (current != null) current],
-      ),
+      layoutBuilder: (current, previous) =>
+          Stack(fit: StackFit.expand, children: [...previous, ?current]),
       child: Image.asset(
         widget.images[_index],
         key: ValueKey(_index),

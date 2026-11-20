@@ -10,11 +10,16 @@ abstract final class AppFonts {
 }
 
 abstract final class AppTextStyles {
+  /// Figma 줄 높이 'normal'(자동) = Pretendard 폰트 메트릭 (1950 + 494) / 2048.
+  /// 지정하지 않으면 Flutter가 대체 폰트 높이를 섞어 Figma보다 커질 수 있다.
+  static const pretendardNormal = 2444 / 2048;
+
   // title/40_bold — 섹션 제목
   static const sectionTitle = TextStyle(
     fontFamily: AppFonts.pretendard,
     fontWeight: FontWeight.w700,
     fontSize: 40,
+    height: pretendardNormal,
     letterSpacing: -0.8,
     color: AppColors.gray900,
   );
@@ -24,6 +29,7 @@ abstract final class AppTextStyles {
     fontFamily: AppFonts.pretendard,
     fontWeight: FontWeight.w500,
     fontSize: 22,
+    height: pretendardNormal,
     color: AppColors.gray600,
   );
 
@@ -32,6 +38,7 @@ abstract final class AppTextStyles {
     fontFamily: AppFonts.pretendard,
     fontWeight: FontWeight.w600,
     fontSize: 24,
+    height: pretendardNormal,
     letterSpacing: -0.48,
     color: AppColors.gray900,
   );
@@ -50,6 +57,7 @@ abstract final class AppTextStyles {
     fontFamily: AppFonts.pretendard,
     fontWeight: FontWeight.w600,
     fontSize: 16,
+    height: pretendardNormal,
     letterSpacing: 0.32,
     color: AppColors.gray800,
   );
@@ -59,6 +67,7 @@ abstract final class AppTextStyles {
     fontFamily: AppFonts.pretendard,
     fontWeight: FontWeight.w500,
     fontSize: 15,
+    height: pretendardNormal,
     color: AppColors.gray900,
   );
 
@@ -67,6 +76,7 @@ abstract final class AppTextStyles {
     fontFamily: AppFonts.pretendard,
     fontWeight: FontWeight.w400,
     fontSize: 13,
+    height: pretendardNormal,
     letterSpacing: -0.26,
     color: AppColors.gray800,
   );

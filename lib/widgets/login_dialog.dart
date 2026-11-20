@@ -43,9 +43,7 @@ class _LoginDialogState extends State<_LoginDialog> {
     // TODO: 로그인 API 연결
     final messenger = ScaffoldMessenger.of(context);
     Navigator.of(context).pop();
-    messenger.showSnackBar(
-      const SnackBar(content: Text('로그인 기능은 준비 중이에요')),
-    );
+    messenger.showSnackBar(const SnackBar(content: Text('로그인 기능은 준비 중이에요')));
   }
 
   @override

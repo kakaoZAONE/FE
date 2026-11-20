@@ -46,14 +46,15 @@ class HeroSection extends StatelessWidget {
       height: isMobile ? 22 / 15 : 25 / 18,
     );
 
-    return SizedBox(
-      height: height,
-      child: Stack(
-        fit: StackFit.expand,
-        children: [
-          // 원본 + AI 시안 3장, 5초마다 페이드 전환
-          const FadeSlideshow(images: HomeAssets.heroSlides),
-          const DecoratedBox(
+    // 높이는 최소값(데스크톱 680). 글자가 길어 넘치면 그만큼 늘어나고, 글자는 아래에 붙는다.
+    return Stack(
+      children: [
+        // 원본 + AI 시안 3장, 5초마다 페이드 전환
+        const Positioned.fill(
+          child: FadeSlideshow(images: HomeAssets.heroSlides),
+        ),
+        const Positioned.fill(
+          child: DecoratedBox(
             decoration: BoxDecoration(
               gradient: LinearGradient(
                 begin: Alignment.topCenter,
@@ -62,49 +63,55 @@ class HeroSection extends StatelessWidget {
               ),
             ),
           ),
-          DesignWidth(
-            child: Padding(
-              padding: EdgeInsets.symmetric(horizontal: padH, vertical: padV),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.end,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    '기업 소재의 놀이 가능성 탐색',
-                    style: bodyStyle.copyWith(color: AppColors.screen),
-                  ),
-                  const SizedBox(height: 10),
-                  Text(
-                    '우리 회사의 소재로\n어떤 놀이가 가능할까요?',
-                    style: AppTextStyles.heroTitle.copyWith(
-                      fontSize: titleSize,
-                      letterSpacing: titleSize * -0.03,
+        ),
+        ConstrainedBox(
+          constraints: BoxConstraints(minHeight: height),
+          child: Align(
+            alignment: Alignment.bottomCenter,
+            child: DesignWidth(
+              child: Padding(
+                padding: EdgeInsets.symmetric(horizontal: padH, vertical: padV),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      '기업 소재의 놀이 가능성 탐색',
+                      style: bodyStyle.copyWith(color: AppColors.screen),
                     ),
-                  ),
-                  const SizedBox(height: 20),
-                  Text(
-                    '소재 사진을 등록하면 AI가 특징을 분석하고 원래 쓰임을 넘어서는 놀이 확장 3가지를 제안합니다.',
-                    style: bodyStyle.copyWith(color: AppColors.gray50),
-                  ),
-                  const SizedBox(height: 20),
-                  Wrap(
-                    spacing: isMobile ? 12 : 30,
-                    runSpacing: 12,
-                    children: [
-                      AppButton(label: '내 소재 등록하기', onPressed: () {}),
-                      AppButton(
-                        label: '샘플로 미리보기',
-                        variant: AppButtonVariant.light,
-                        onPressed: () {},
+                    const SizedBox(height: 10),
+                    Text(
+                      '우리 회사의 소재로\n어떤 놀이가 가능할까요?',
+                      style: AppTextStyles.heroTitle.copyWith(
+                        fontSize: titleSize,
+                        letterSpacing: titleSize * -0.03,
                       ),
-                    ],
-                  ),
-                ],
+                    ),
+                    const SizedBox(height: 20),
+                    Text(
+                      '소재 사진을 등록하면 AI가 특징을 분석하고 원래 쓰임을 넘어서는 놀이 확장 3가지를 제안합니다.',
+                      style: bodyStyle.copyWith(color: AppColors.gray50),
+                    ),
+                    const SizedBox(height: 20),
+                    Wrap(
+                      spacing: isMobile ? 12 : 30,
+                      runSpacing: 12,
+                      children: [
+                        AppButton(label: '내 소재 등록하기', onPressed: () {}),
+                        AppButton(
+                          label: '샘플로 미리보기',
+                          variant: AppButtonVariant.light,
+                          onPressed: () {},
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
               ),
             ),
           ),
-        ],
-      ),
+        ),
+      ],
     );
   }
 }

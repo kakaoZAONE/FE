@@ -40,17 +40,17 @@ class HomePage extends StatelessWidget {
             const HeroSection(),
             DesignWidth(
               child: Padding(
-                // 데스크톱: 위 110(10+40+60), 아래 50(10+40) — 피그마 값
+                // 데스크톱 위 105 = 5(세로 가운데 정렬 여백) + 40 + 60 — 피그마 y 895
                 padding: EdgeInsets.fromLTRB(
                   pad,
                   Responsive.value<double>(
                     context,
-                    desktop: 110,
+                    desktop: 105,
                     tablet: 80,
                     mobile: 50,
                   ),
                   pad,
-                  Responsive.value<double>(context, desktop: 50, mobile: 0),
+                  0,
                 ),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -66,12 +66,12 @@ class HomePage extends StatelessWidget {
                 ),
               ),
             ),
-            // Figma 프레임에서 Contact 아래 ~ Footer 사이 여백
+            // Contact 아래 ~ Footer 위 여백: 피그마 3836 - (2402 + 314 + 795) = 325
             SizedBox(
               height: Responsive.value<double>(
                 context,
-                desktop: 288,
-                tablet: 160,
+                desktop: 325,
+                tablet: 210,
                 mobile: 80,
               ),
             ),

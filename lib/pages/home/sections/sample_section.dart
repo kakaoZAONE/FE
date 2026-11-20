@@ -46,12 +46,35 @@ class SampleSection extends StatelessWidget {
             ],
           ),
         SizedBox(height: isMobile ? 24 : 40),
-        ResponsiveGrid(
-          columns: columns,
-          children: [
-            for (final s in _samples)
-              SampleCard(images: s.$1, name: s.$2, source: s.$3, caseCount: s.$4),
-          ],
+        LayoutBuilder(
+          builder: (context, constraints) {
+            final cards = [
+              for (final s in _samples)
+                SampleCard(
+                  images: s.$1,
+                  name: s.$2,
+                  source: s.$3,
+                  caseCount: s.$4,
+                ),
+            ];
+            // 피그마: 카드 폭 312 고정(이미지 280 + 좌우 15 + 보더), 간격 20, 왼쪽 정렬
+            const cardWidth = 312.0;
+            const gap = 20.0;
+            final fixedRowWidth =
+                cardWidth * cards.length + gap * (cards.length - 1);
+            if (columns == 4 && constraints.maxWidth >= fixedRowWidth) {
+              return Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  for (var i = 0; i < cards.length; i++) ...[
+                    if (i > 0) const SizedBox(width: gap),
+                    SizedBox(width: cardWidth, child: cards[i]),
+                  ],
+                ],
+              );
+            }
+            return ResponsiveGrid(columns: columns, children: cards);
+          },
         ),
       ],
     );
@@ -110,9 +133,12 @@ class _SampleCardState extends State<SampleCard> {
                 children: [
                   for (var i = 1; i < widget.images.length; i++) ...[
                     if (i > 1) const SizedBox(width: 4),
-                    // 피그마 약 91 x 64
+                    // 피그마 (280 - 4*2) / 3 = 90.67 x 64
                     Expanded(
-                      child: _RoundedImage(widget.images[i], aspectRatio: 91 / 64),
+                      child: _RoundedImage(
+                        widget.images[i],
+                        aspectRatio: (280 - 8) / 3 / 64,
+                      ),
                     ),
                   ],
                 ],
@@ -123,7 +149,10 @@ class _SampleCardState extends State<SampleCard> {
               Text(widget.source, style: AppTextStyles.title16),
               const SizedBox(height: 20),
               Container(
-                padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 10,
+                  vertical: 5,
+                ),
                 decoration: BoxDecoration(
                   color: AppColors.screen,
                   border: Border.all(color: AppColors.gray900),

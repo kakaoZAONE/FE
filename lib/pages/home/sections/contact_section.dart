@@ -18,54 +18,70 @@ class ContactSection extends StatelessWidget {
     final pad = isMobile ? 20.0 : 32.0;
 
     return ClipPath(
+      // 피그마 마스크 path: M0 0 H248.032 L315.097 47.4068 H1320
+      // 좁은 화면에서도 사선이 화면 안에 들어오도록 시작점을 제한
       clipper: NotchClipper(
-        // 좁은 화면에서도 사선이 화면 안에 들어오도록
-        notchStart: (s) => math.min(248, s.width * 0.45),
-        notchEnd: (s) => math.min(248, s.width * 0.45) + 66,
-        notchDepth: 47,
+        notchStart: (s) => math.min(248.032, s.width * 0.45),
+        notchEnd: (s) => math.min(248.032, s.width * 0.45) + 67.065,
+        notchDepth: 47.4068,
       ),
       child: Container(
         constraints: const BoxConstraints(minHeight: 314),
         color: AppColors.dune,
-        // 피그마: Contact 라벨 top 31.5, 본문 시작 95, 아래 32
-        padding: EdgeInsets.fromLTRB(pad, 31.5, pad, 32),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
+        // 피그마: Contact 라벨 top 31.5 (absolute), 본문 위 95 / 아래 32
+        child: Stack(
           children: [
-            Text(
-              'Contact',
-              style: AppTextStyles.body13.copyWith(color: AppColors.cararra),
-            ),
-            const SizedBox(height: 47),
-            Text(
-              '결과가 마음에 드신다면',
-              style: TextStyle(
-                fontFamily: AppFonts.pretendard,
-                fontWeight: FontWeight.w700,
-                fontSize: isMobile ? 22 : 28,
-                letterSpacing: isMobile ? -0.44 : -0.56,
-                color: AppColors.screen,
+            Positioned(
+              left: pad,
+              top: 31.5,
+              child: Text(
+                'Contact',
+                style: AppTextStyles.body13.copyWith(color: AppColors.cararra),
               ),
             ),
-            const SizedBox(height: 14),
-            Text(
-              '실제 소재 제공과 교육 활용은 자원랩의 공식 협의 절차로 진행됩니다.\n'
-              '탐색 결과를 저장해 두면 내부 검토와 문의에 그대로 활용할 수 있습니다.',
-              style: AppTextStyles.title18.copyWith(
-                color: AppColors.gray200,
-                fontSize: isMobile ? 15 : 18,
-                height: isMobile ? 22 / 15 : 25 / 18,
-              ),
-            ),
-            SizedBox(height: isMobile ? 28 : 40),
-            AppButton(
-              label: 'ZAONE LAB  바로가기',
-              variant: AppButtonVariant.light,
-              onPressed: () {},
+            Padding(
+              padding: EdgeInsets.fromLTRB(pad, 95, pad, 32),
+              child: _body(isMobile),
             ),
           ],
         ),
       ),
+    );
+  }
+
+  Widget _body(bool isMobile) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        Text(
+          '결과가 마음에 드신다면',
+          style: TextStyle(
+            fontFamily: AppFonts.pretendard,
+            fontWeight: FontWeight.w700,
+            fontSize: isMobile ? 22 : 28,
+            height: AppTextStyles.pretendardNormal,
+            letterSpacing: isMobile ? -0.44 : -0.56,
+            color: AppColors.screen,
+          ),
+        ),
+        const SizedBox(height: 14),
+        Text(
+          '실제 소재 제공과 교육 활용은 자원랩의 공식 협의 절차로 진행됩니다.\n'
+          '탐색 결과를 저장해 두면 내부 검토와 문의에 그대로 활용할 수 있습니다.',
+          style: AppTextStyles.title18.copyWith(
+            color: AppColors.gray200,
+            fontSize: isMobile ? 15 : 18,
+            height: isMobile ? 22 / 15 : 25 / 18,
+          ),
+        ),
+        SizedBox(height: isMobile ? 28 : 40),
+        AppButton(
+          label: 'ZAONE LAB  바로가기',
+          variant: AppButtonVariant.light,
+          onPressed: () {},
+        ),
+      ],
     );
   }
 }

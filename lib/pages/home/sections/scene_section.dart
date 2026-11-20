@@ -22,11 +22,7 @@ class SceneSection extends StatelessWidget {
       '변형',
       '심을 짧게 잘라 빛 테이블 위에 늘어놓습니다.\n자른 심에 따라 빛이 다르게 보입니다',
     ),
-    (
-      HomeAssets.sceneCombine,
-      '조합',
-      '포장 부자재와 조합하여 \n벽을 따라 구슬이 흐르는 길을 만듭니다.',
-    ),
+    (HomeAssets.sceneCombine, '조합', '포장 부자재와 조합하여 \n벽을 따라 구슬이 흐르는 길을 만듭니다.'),
   ];
 
   @override
@@ -40,7 +36,9 @@ class SceneSection extends StatelessWidget {
           title: '원래 쓰임에서는 떠올리기 어려운 활용을 제안합니다',
           sub: '결과는 탐색·변형·조합 세 방향으로 나뉘며 장면마다 소재가 어떤 새로운 쓰임으로 바뀌는지 함께 보여줍니다.',
         ),
-        SizedBox(height: Responsive.value<double>(context, desktop: 40, mobile: 24)),
+        SizedBox(
+          height: Responsive.value<double>(context, desktop: 40, mobile: 24),
+        ),
         ResponsiveGrid(
           columns: columns,
           gap: 30,

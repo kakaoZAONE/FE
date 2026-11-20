@@ -38,9 +38,14 @@ class _AppButtonState extends State<AppButton> {
     final bg = isDark ? AppColors.gray900 : AppColors.screen;
     final fg =
         widget.foregroundColor ?? (isDark ? Colors.white : AppColors.gray900);
-    final label = Text(
-      widget.label,
-      style: AppTextStyles.title18.copyWith(color: fg),
+    // 폭이 모자란 아주 좁은 화면에서만 글자를 줄여 넘치지 않게 (넉넉하면 원래 크기)
+    final label = FittedBox(
+      fit: BoxFit.scaleDown,
+      child: Text(
+        widget.label,
+        maxLines: 1,
+        style: AppTextStyles.title18.copyWith(color: fg),
+      ),
     );
 
     return MouseRegion(
@@ -63,7 +68,10 @@ class _AppButtonState extends State<AppButton> {
             // expand가 아니면 내용 너비만큼만 차지
             child: widget.expand
                 ? label
-                : Row(mainAxisSize: MainAxisSize.min, children: [label]),
+                : Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [Flexible(child: label)],
+                  ),
           ),
         ),
       ),

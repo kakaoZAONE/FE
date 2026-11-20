@@ -31,6 +31,5 @@ class NotchClipper extends CustomClipper<Path> {
   }
 
   @override
-  bool shouldReclip(covariant NotchClipper old) =>
-      old.notchDepth != notchDepth;
+  bool shouldReclip(covariant NotchClipper old) => old.notchDepth != notchDepth;
 }

@@ -21,9 +21,19 @@ class HomeFooter extends StatelessWidget {
       child: DesignWidth(
         child: Padding(
           padding: EdgeInsets.fromLTRB(
-            Responsive.value<double>(context, desktop: 120, tablet: 40, mobile: 20),
+            Responsive.value<double>(
+              context,
+              desktop: 120,
+              tablet: 40,
+              mobile: 20,
+            ),
             48,
-            Responsive.value<double>(context, desktop: 120, tablet: 40, mobile: 20),
+            Responsive.value<double>(
+              context,
+              desktop: 120,
+              tablet: 40,
+              mobile: 20,
+            ),
             56,
           ),
           child: Responsive.of(context) == ScreenSize.mobile
@@ -39,7 +49,8 @@ class HomeFooter extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    _brand(),
+                    // 폭이 모자라면 양쪽 블록 모두 줄바꿈 (넉넉하면 원래 크기)
+                    Flexible(child: _brand()),
                     const SizedBox(width: 24),
                     Flexible(child: _links(CrossAxisAlignment.end)),
                   ],
@@ -126,7 +137,9 @@ class HomeFooter extends StatelessWidget {
         const SizedBox(height: 8),
         Text(
           'AI가 생성한 장면은 가상의 예시이며 실제 사용 적합성은 별도 검토가 필요합니다.',
-          textAlign: align == CrossAxisAlignment.end ? TextAlign.right : TextAlign.left,
+          textAlign: align == CrossAxisAlignment.end
+              ? TextAlign.right
+              : TextAlign.left,
           style: _base.copyWith(
             fontSize: 12,
             height: 1.5,
