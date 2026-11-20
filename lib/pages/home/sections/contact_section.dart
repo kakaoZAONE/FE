@@ -1,6 +1,7 @@
 import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import '../../../theme/app_colors.dart';
 import '../../../theme/app_text_styles.dart';
@@ -11,6 +12,13 @@ import '../../../widgets/responsive.dart';
 /// "결과가 마음에 드신다면" — 어두운 Contact 배너 (데스크톱 1320 x 314)
 class ContactSection extends StatelessWidget {
   const ContactSection({super.key});
+
+  /// 'ZAONE LAB 바로가기' 이동 주소
+  static final zaoneLabUrl = Uri.parse('https://www.zaone.org/zaone-lab');
+
+  /// 자원랩 홈페이지를 새 탭으로 연다.
+  static Future<void> openZaoneLab() =>
+      launchUrl(zaoneLabUrl, webOnlyWindowName: '_blank');
 
   @override
   Widget build(BuildContext context) {
@@ -79,7 +87,7 @@ class ContactSection extends StatelessWidget {
         AppButton(
           label: 'ZAONE LAB  바로가기',
           variant: AppButtonVariant.light,
-          onPressed: () {},
+          onPressed: openZaoneLab,
         ),
       ],
     );

@@ -4,6 +4,7 @@ import '../../../theme/app_colors.dart';
 import '../../../theme/app_text_styles.dart';
 import '../../../widgets/app_button.dart';
 import '../../../widgets/responsive.dart';
+import '../../../widgets/sized_asset_image.dart';
 import '../home_assets.dart';
 import 'section_heading.dart';
 
@@ -183,7 +184,7 @@ class _RoundedImage extends StatelessWidget {
       borderRadius: BorderRadius.circular(2),
       child: AspectRatio(
         aspectRatio: aspectRatio,
-        child: Image.asset(path, fit: BoxFit.cover),
+        child: SizedAssetImage(path),
       ),
     );
   }

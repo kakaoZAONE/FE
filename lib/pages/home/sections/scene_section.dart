@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../../../theme/app_colors.dart';
 import '../../../theme/app_text_styles.dart';
 import '../../../widgets/responsive.dart';
+import '../../../widgets/sized_asset_image.dart';
 import '../home_assets.dart';
 import 'section_heading.dart';
 
@@ -76,7 +77,7 @@ class _SceneCard extends StatelessWidget {
           // 피그마 420 x 362
           child: AspectRatio(
             aspectRatio: 420 / 362,
-            child: Image.asset(image, fit: BoxFit.cover),
+            child: SizedAssetImage(image),
           ),
         ),
         Container(

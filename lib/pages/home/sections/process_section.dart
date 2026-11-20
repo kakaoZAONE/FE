@@ -4,6 +4,7 @@ import '../../../theme/app_colors.dart';
 import '../../../theme/app_text_styles.dart';
 import '../../../widgets/notch_clipper.dart';
 import '../../../widgets/responsive.dart';
+import '../../../widgets/sized_asset_image.dart';
 import '../home_assets.dart';
 import 'section_heading.dart';
 
@@ -90,7 +91,7 @@ class _ProcessCard extends StatelessWidget {
             child: Stack(
               fit: StackFit.expand,
               children: [
-                Image.asset(HomeAssets.processCard, fit: BoxFit.cover),
+                SizedAssetImage(HomeAssets.processCard),
                 const DecoratedBox(
                   decoration: BoxDecoration(
                     gradient: LinearGradient(

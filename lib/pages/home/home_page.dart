@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 
 import '../../widgets/design_width.dart';
+import '../../widgets/fast_wheel_scroll.dart';
 import '../../widgets/responsive.dart';
+import '../../widgets/reveal_on_scroll.dart';
 import 'sections/contact_section.dart';
 import 'sections/hero_section.dart';
 import 'sections/home_footer.dart';
@@ -20,7 +22,7 @@ class HomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final pad = Responsive.pagePadding(context);
-    // 섹션 사이: 데스크톱 160 = 패딩 60 + 간격 40 + 패딩 60 (피그마)
+    // 섹션 사이: 데스크톱 160 = 패딩 60 + 간격 40 + 패딩 60 
     final sectionGap = Responsive.value<double>(
       context,
       desktop: 160,
@@ -33,50 +35,54 @@ class HomePage extends StatelessWidget {
       body: SingleChildScrollView(
         // 로고 누르면 맨 위로 올라가도록 PrimaryScrollController 사용
         primary: true,
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            const HomeHeader(),
-            const HeroSection(),
-            DesignWidth(
-              child: Padding(
-                // 데스크톱 위 105 = 5(세로 가운데 정렬 여백) + 40 + 60 — 피그마 y 895
-                padding: EdgeInsets.fromLTRB(
-                  pad,
-                  Responsive.value<double>(
-                    context,
-                    desktop: 105,
-                    tablet: 80,
-                    mobile: 50,
+        // 마우스 휠을 크게·부드럽게
+        child: FastWheelScroll(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              const HomeHeader(),
+              const HeroSection(),
+              DesignWidth(
+                child: Padding(
+                  // 데스크톱 위 105 = 5(세로 가운데 정렬 여백) + 40 + 60 — 피그마 y 895
+                  padding: EdgeInsets.fromLTRB(
+                    pad,
+                    Responsive.value<double>(
+                      context,
+                      desktop: 105,
+                      tablet: 80,
+                      mobile: 50,
+                    ),
+                    pad,
+                    0,
                   ),
-                  pad,
-                  0,
-                ),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
-                  children: [
-                    const ProcessSection(),
-                    SizedBox(height: sectionGap),
-                    const SampleSection(),
-                    SizedBox(height: sectionGap),
-                    const SceneSection(),
-                    SizedBox(height: sectionGap / 1.6),
-                    const ContactSection(),
-                  ],
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: [
+                      // 섹션마다 화면에 들어올 때 한 번씩 떠오르며 나타남
+                      const RevealOnScroll(child: ProcessSection()),
+                      SizedBox(height: sectionGap),
+                      const RevealOnScroll(child: SampleSection()),
+                      SizedBox(height: sectionGap),
+                      const RevealOnScroll(child: SceneSection()),
+                      SizedBox(height: sectionGap / 1.6),
+                      const RevealOnScroll(child: ContactSection()),
+                    ],
+                  ),
                 ),
               ),
-            ),
-            // Contact 아래 ~ Footer 위 여백: 피그마 3836 - (2402 + 314 + 795) = 325
-            SizedBox(
-              height: Responsive.value<double>(
-                context,
-                desktop: 325,
-                tablet: 210,
-                mobile: 80,
+              // Contact 아래 ~ Footer 위 여백: 피그마 3836 - (2402 + 314 + 795) = 325
+              SizedBox(
+                height: Responsive.value<double>(
+                  context,
+                  desktop: 325,
+                  tablet: 210,
+                  mobile: 80,
+                ),
               ),
-            ),
-            const HomeFooter(),
-          ],
+              const HomeFooter(),
+            ],
+          ),
         ),
       ),
     );

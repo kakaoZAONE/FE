@@ -1,0 +1,21 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      // 코드 수정·중단점 확인용 (느림: 스크롤이 끊겨 보이는 게 정상)
+      "name": "FE (debug)",
+      "request": "launch",
+      "type": "dart",
+      "flutterMode": "debug",
+      "deviceId": "chrome"
+    },
+    {
+      // 실제 배포와 같은 속도로 화면 확인 (스크롤·애니메이션 확인은 이걸로)
+      "name": "FE (release - 부드럽게)",
+      "request": "launch",
+      "type": "dart",
+      "flutterMode": "release",
+      "deviceId": "chrome"
+    }
+  ]
+}
