@@ -1,9 +1,76 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:kakaozaone_fe/features/sample_result/sample_result_page.dart';
 import 'package:kakaozaone_fe/main.dart';
+import 'package:kakaozaone_fe/pages/home/sections/sample_section.dart';
 
 void main() {
+  testWidgets('헤더의 샘플 결과 메뉴가 결과 페이지를 연다', (tester) async {
+    tester.view.physicalSize = const Size(1440, 4000);
+    tester.view.devicePixelRatio = 1;
+    addTearDown(tester.view.reset);
+
+    await tester.pumpWidget(const MyApp());
+    expect(
+      tester.takeException(),
+      isNull,
+      reason: 'home screen should not overflow',
+    );
+
+    await tester.tap(find.text('샘플 결과').first);
+    await tester.pump();
+    await tester.pump(const Duration(milliseconds: 400));
+
+    expect(find.byType(SampleResultPage), findsOneWidget);
+    expect(
+      tester.takeException(),
+      isNull,
+      reason: 'sample result screen should not overflow',
+    );
+
+    await tester.pumpWidget(const SizedBox());
+  });
+
+  testWidgets('소재별 결과의 전체보기 버튼이 결과 페이지를 연다', (tester) async {
+    tester.view.physicalSize = const Size(1440, 2000);
+    tester.view.devicePixelRatio = 1;
+    addTearDown(tester.view.reset);
+
+    await tester.pumpWidget(
+      const MaterialApp(
+        home: Scaffold(body: SingleChildScrollView(child: SampleSection())),
+      ),
+    );
+    await tester.tap(find.text('전체보기'));
+    await tester.pump();
+    await tester.pump(const Duration(milliseconds: 400));
+
+    expect(find.byType(SampleResultPage), findsOneWidget);
+    expect(tester.takeException(), isNull);
+
+    await tester.pumpWidget(const SizedBox());
+  });
+
+  testWidgets('샘플 사진을 누르면 해당 소재 상세 화면이 열린다', (tester) async {
+    tester.view.physicalSize = const Size(1440, 4000);
+    tester.view.devicePixelRatio = 1;
+    addTearDown(tester.view.reset);
+
+    await tester.pumpWidget(const MaterialApp(home: SampleResultPage()));
+    await tester.tap(find.text('종이관'));
+    await tester.pump();
+    await tester.pump(const Duration(milliseconds: 400));
+
+    expect(find.text('관으로 소리 주고받기'), findsOneWidget);
+    await tester.tap(find.text('지퍼 자투리').last);
+    await tester.pump();
+    expect(find.text('지퍼의 색과 길이 탐색하기'), findsOneWidget);
+    expect(tester.takeException(), isNull);
+
+    await tester.pumpWidget(const SizedBox());
+  });
+
   testWidgets('메인 페이지 주요 섹션이 렌더링된다', (tester) async {
     tester.view.physicalSize = const Size(1440, 4000);
     tester.view.devicePixelRatio = 1;

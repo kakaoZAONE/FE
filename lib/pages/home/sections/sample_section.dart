@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../../../features/sample_result/sample_result_page.dart';
 import '../../../theme/app_colors.dart';
 import '../../../theme/app_text_styles.dart';
 import '../../../widgets/app_button.dart';
@@ -29,7 +30,10 @@ class SampleSection extends StatelessWidget {
       title: '소재별 결과를 먼저 확인해 보세요',
       sub: '기업 소재를 가정해 미리 만든 결과입니다. 해외 기관의 실제 활용 사례도 함께 볼 수 있어요',
     );
-    final button = AppButton(label: '전체보기', onPressed: () {});
+    final button = AppButton(
+      label: '전체보기',
+      onPressed: () => SampleResultPage.open(context),
+    );
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,

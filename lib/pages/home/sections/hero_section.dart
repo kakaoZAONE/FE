@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../../../features/sample_result/sample_result_page.dart';
 import '../../../theme/app_colors.dart';
 import '../../../theme/app_text_styles.dart';
 import '../../../widgets/app_button.dart';
@@ -101,7 +102,7 @@ class HeroSection extends StatelessWidget {
                         AppButton(
                           label: '샘플로 미리보기',
                           variant: AppButtonVariant.light,
-                          onPressed: () {},
+                          onPressed: () => SampleResultPage.open(context),
                         ),
                       ],
                     ),

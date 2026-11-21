@@ -59,6 +59,7 @@ flutter:
   uses-material-design: true
 
   assets:
+    - assets/images/
     - assets/images/home/
 
   # 폰트는 메인 페이지에 쓰인 글자만 남긴 서브셋입니다.

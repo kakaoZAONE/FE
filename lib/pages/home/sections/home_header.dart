@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../../../features/sample_result/sample_result_page.dart';
 import '../../../theme/app_colors.dart';
 import '../../../theme/app_text_styles.dart';
 import '../../../widgets/app_button.dart';
@@ -68,7 +69,12 @@ class HomeHeader extends StatelessWidget {
                   // 피그마: 메뉴 칸 너비 64 (마지막 '자원랩 소개'만 글자가 더 김)
                   ConstrainedBox(
                     constraints: const BoxConstraints(minWidth: 64),
-                    child: _NavLink(label: _navItems[i]),
+                    child: _NavLink(
+                      label: _navItems[i],
+                      onTap: i == 0
+                          ? () => SampleResultPage.open(context)
+                          : null,
+                    ),
                   ),
                 ],
               ],
