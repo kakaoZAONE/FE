@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 
-/// Figma 1.1 main 색상 토큰
+/// Figma 최종 디자인 색상 토큰 (gray/50~900, screen, zaro.ai/Cararra·Dune)
 abstract final class AppColors {
   static const gray50 = Color(0xFFF2F4F6);
+  static const gray100 = Color(0xFFE9ECEF);
   static const gray200 = Color(0xFFC9CDD1);
   static const gray300 = Color(0xFFB0B4B8);
   static const gray400 = Color(0xFF979B9F);

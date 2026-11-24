@@ -30,6 +30,9 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
+  # path URL(/samples) 사용 — Flutter SDK 내장 패키지
+  flutter_web_plugins:
+    sdk: flutter
 
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
@@ -62,7 +65,7 @@ flutter:
     - assets/images/
     - assets/images/home/
 
-  # 폰트는 메인 페이지에 쓰인 글자만 남긴 서브셋입니다.
+  # 폰트는 lib/ 에 쓰인 글자만 남긴 서브셋입니다.
   # 새 문구를 추가하면 tool/subset_fonts.sh 로 다시 만들어 주세요.
   fonts:
     - family: Pretendard

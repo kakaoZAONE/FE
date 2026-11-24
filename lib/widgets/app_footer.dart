@@ -1,13 +1,14 @@
 import 'package:flutter/material.dart';
 
-import '../../../theme/app_colors.dart';
-import '../../../theme/app_text_styles.dart';
-import '../../../widgets/design_width.dart';
-import '../../../widgets/responsive.dart';
+import '../core/external_links.dart';
+import '../theme/app_colors.dart';
+import '../theme/app_text_styles.dart';
+import 'design_width.dart';
+import 'responsive.dart';
 
-/// Figma `Footer` — 모바일에서는 좌우 블록을 세로로 쌓는다.
-class HomeFooter extends StatelessWidget {
-  const HomeFooter({super.key});
+/// Figma `Footer` 컴포넌트 — 모든 페이지 공통. 모바일에서는 좌우 블록을 세로로 쌓는다.
+class AppFooter extends StatelessWidget {
+  const AppFooter({super.key});
 
   static const _base = TextStyle(fontFamily: AppFonts.notoSansKr);
 
@@ -97,7 +98,7 @@ class HomeFooter extends StatelessWidget {
             Container(width: 1, height: 14, color: AppColors.footerDivider),
             const SizedBox(width: 10),
             Text(
-              '열린 설명서',
+              '자원도감',
               style: _base.copyWith(
                 fontWeight: FontWeight.w700,
                 fontSize: 15,
@@ -130,8 +131,14 @@ class HomeFooter extends StatelessWidget {
           spacing: 12,
           runSpacing: 4,
           children: [
-            for (final label in const ['이용약관', '개인정보처리방침', '자원랩 공식 문의'])
-              _FooterLink(label: label, style: _base),
+            // TODO: 이용약관·개인정보처리방침 문서 확정 후 연결 (docs/REQUIREMENTS.md)
+            _FooterLink(label: '이용약관', style: _base),
+            _FooterLink(label: '개인정보처리방침', style: _base),
+            _FooterLink(
+              label: '자원랩 공식 문의',
+              style: _base,
+              onTap: () => ExternalLinks.open(ExternalLinks.zaoneContact),
+            ),
           ],
         ),
         const SizedBox(height: 8),
@@ -153,17 +160,20 @@ class HomeFooter extends StatelessWidget {
 }
 
 class _FooterLink extends StatelessWidget {
-  const _FooterLink({required this.label, required this.style});
+  const _FooterLink({required this.label, required this.style, this.onTap});
 
   final String label;
   final TextStyle style;
 
+  /// null이면 아직 연결할 문서가 없어 클릭할 수 없는 글자로 둔다.
+  final VoidCallback? onTap;
+
   @override
   Widget build(BuildContext context) {
     return MouseRegion(
-      cursor: SystemMouseCursors.click,
+      cursor: onTap != null ? SystemMouseCursors.click : MouseCursor.defer,
       child: GestureDetector(
-        onTap: () {},
+        onTap: onTap,
         child: Text(
           label,
           style: style.copyWith(

@@ -4,7 +4,7 @@ kakaoZAONE 팀의 Flutter 프론트엔드 프로젝트입니다.
 
 ## 개발 환경
 
-- Flutter 3.44.9 (stable)
+- Flutter 3.44.9 이상 (stable, 로컬 확인 3.47.5)
 - Dart 3.12.2 (Flutter SDK에 포함)
 - 프로젝트 이름: `kakaozaone_fe` (임시)
 - 생성된 플랫폼: Android, iOS, Web
@@ -34,14 +34,17 @@ iOS 빌드 및 실행에는 macOS와 Xcode가 필요합니다.
 ## 프로젝트 구조
 
 ```text
-lib/main.dart           앱 진입점 및 기본 샘플 화면
-test/widget_test.dart   기본 위젯 테스트
-android/                Android 프로젝트 설정
-ios/                    iOS 프로젝트 설정
-web/                    웹 실행 설정
-pubspec.yaml            패키지 및 에셋 설정
-pubspec.lock            의존성 버전 고정
-analysis_options.yaml   정적 분석 규칙
+lib/main.dart                 앱 진입점 (path URL 전략)
+lib/app/app_routes.dart       화면 경로 (/, /samples)
+lib/core/                     외부 링크 등 공통 로직
+lib/theme/                    색상·글꼴 토큰 (Figma 기준)
+lib/widgets/                  공통 위젯 (AppHeader, AppFooter, AppButton …)
+lib/pages/home/               메인 페이지 (1.1 main)
+lib/features/sample_result/   샘플 결과·상세
+assets/fonts/                 서브셋 폰트 (tool/subset_fonts.sh)
+assets/images/                Figma에서 추출한 이미지
+docs/                         Figma·요구사항·API·진행·QA 문서
+tool/                         폰트 서브셋·Vercel 빌드 스크립트
 ```
 
 ## 코드 확인

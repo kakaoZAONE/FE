@@ -43,3 +43,10 @@ app.*.map.json
 /android/app/debug
 /android/app/profile
 /android/app/release
+
+# 로컬 전용 (비공개 링크·설정·비밀값)
+.claude/settings.local.json
+docs/internal/
+.vercel
+.env
+.env.*
