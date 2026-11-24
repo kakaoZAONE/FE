@@ -15,7 +15,14 @@
 - **Commit / Push / PR / 배포:** 아래 '반영 결과'에 기록
 
 ### 반영 결과
-- (커밋 후 갱신)
+- **커밋:** `13ccfbd` feat: 메인 페이지 최종 Figma 반영 및 공통 레이아웃·라우팅 구성
+- **Push:** ✅ `origin/feat/figma-final-ui`
+- **PR:** 미생성. `gh` CLI 미로그인 → https://github.com/kakaoZAONE/FE/pull/new/feat/figma-final-ui
+- **배포:** ❌ 미배포
+  - GitHub에 Vercel 연동 기록(statuses, deployments)이 없다(main 포함).
+  - 로컬 Vercel 계정에도 이 저장소의 프로젝트가 없다.
+  - 중복 프로젝트를 피하려고 새 프로젝트는 만들지 않았다.
+  - 조치: 팀의 기존 Vercel 프로젝트 소유자를 확인하고 GitHub 연동을 켠다. 없으면 팀 승인 후 1개를 만든다.
 
 ### 미완료 · 다음 단계
 - DAY 2: 1.3 이용안내, 1.4 자원랩 소개, 로그인 컴포넌트, 데이터 처리 안내. 이용 안내와 자원랩 소개 메뉴를 활성화한다.
