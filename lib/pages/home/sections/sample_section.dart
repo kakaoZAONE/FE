@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 
+import '../../../app/app_routes.dart';
 import '../../../features/sample_result/sample_result_page.dart';
 import '../../../theme/app_colors.dart';
 import '../../../theme/app_text_styles.dart';
 import '../../../widgets/app_button.dart';
+import '../../../widgets/app_header.dart';
 import '../../../widgets/responsive.dart';
 import '../../../widgets/sized_asset_image.dart';
 import '../home_assets.dart';
@@ -15,10 +17,11 @@ class SampleSection extends StatelessWidget {
   const SampleSection({super.key});
 
   static const _samples = [
-    (HomeAssets.paperTube, '종이관', '섬유 제조 · 원단 심', 2),
-    (HomeAssets.zipper, '지퍼 자투리', '의류 봉제 공정', 1),
-    (HomeAssets.bottleCap, '플라스틱 병 뚜껑', '불량 공정', 2),
-    (HomeAssets.cushion, '포장 완충재', '가전 제품 포장', 2),
+    // 순서는 샘플 결과 페이지의 소재 순서와 같다 (카드 → 해당 상세)
+    (HomeAssets.paperTube, '종이관', '섬유 제조 · 원단 심'),
+    (HomeAssets.zipper, '지퍼 자투리', '의류 봉제 공정'),
+    (HomeAssets.bottleCap, '플라스틱 병 뚜껑', '불량 공정'),
+    (HomeAssets.cushion, '포장 완충재', '가전 제품 포장'),
   ];
 
   @override
@@ -28,11 +31,12 @@ class SampleSection extends StatelessWidget {
 
     const heading = SectionHeading(
       title: '소재별 결과를 먼저 확인해 보세요',
-      sub: '기업 소재를 가정해 미리 만든 결과입니다. 해외 기관의 실제 활용 사례도 함께 볼 수 있어요',
+      // 해외 실제 사례 안내 문구는 서비스 정책으로 제거 (docs/REQUIREMENTS.md)
+      sub: '기업 소재를 가정해 미리 만든 결과입니다.',
     );
     final button = AppButton(
       label: '전체보기',
-      onPressed: () => SampleResultPage.open(context),
+      onPressed: () => AppHeader.goTo(context, AppRoutes.samples),
     );
 
     return Column(
@@ -54,12 +58,12 @@ class SampleSection extends StatelessWidget {
         LayoutBuilder(
           builder: (context, constraints) {
             final cards = [
-              for (final s in _samples)
+              for (var i = 0; i < _samples.length; i++)
                 SampleCard(
-                  images: s.$1,
-                  name: s.$2,
-                  source: s.$3,
-                  caseCount: s.$4,
+                  images: _samples[i].$1,
+                  name: _samples[i].$2,
+                  source: _samples[i].$3,
+                  onTap: () => SampleResultPage.openSample(context, i),
                 ),
             ];
             // 피그마: 카드 폭 312 고정(이미지 280 + 좌우 15 + 보더), 간격 20, 왼쪽 정렬
@@ -93,14 +97,12 @@ class SampleCard extends StatefulWidget {
     required this.images,
     required this.name,
     required this.source,
-    required this.caseCount,
     this.onTap,
   });
 
   final List<String> images;
   final String name;
   final String source;
-  final int caseCount;
   final VoidCallback? onTap;
 
   @override
@@ -112,12 +114,13 @@ class _SampleCardState extends State<SampleCard> {
 
   @override
   Widget build(BuildContext context) {
+    final enabled = widget.onTap != null;
     return MouseRegion(
-      cursor: SystemMouseCursors.click,
-      onEnter: (_) => setState(() => _hovered = true),
-      onExit: (_) => setState(() => _hovered = false),
+      cursor: enabled ? SystemMouseCursors.click : MouseCursor.defer,
+      onEnter: enabled ? (_) => setState(() => _hovered = true) : null,
+      onExit: enabled ? (_) => setState(() => _hovered = false) : null,
       child: GestureDetector(
-        onTap: widget.onTap ?? () {},
+        onTap: widget.onTap,
         child: AnimatedContainer(
           duration: const Duration(milliseconds: 150),
           padding: const EdgeInsets.fromLTRB(15, 10, 15, 30),
@@ -152,22 +155,7 @@ class _SampleCardState extends State<SampleCard> {
               Text(widget.name, style: AppTextStyles.title24),
               const SizedBox(height: 10),
               Text(widget.source, style: AppTextStyles.title16),
-              const SizedBox(height: 20),
-              Container(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 10,
-                  vertical: 5,
-                ),
-                decoration: BoxDecoration(
-                  color: AppColors.screen,
-                  border: Border.all(color: AppColors.gray900),
-                  borderRadius: BorderRadius.circular(100),
-                ),
-                child: Text(
-                  '해외 실제 사례 ${widget.caseCount}건',
-                  style: AppTextStyles.body13,
-                ),
-              ),
+              // Figma의 '해외 실제 사례 N건' 배지는 서비스 정책으로 제거
             ],
           ),
         ),

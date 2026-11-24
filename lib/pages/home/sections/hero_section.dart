@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 
-import '../../../features/sample_result/sample_result_page.dart';
+import '../../../app/app_routes.dart';
 import '../../../theme/app_colors.dart';
 import '../../../theme/app_text_styles.dart';
 import '../../../widgets/app_button.dart';
+import '../../../widgets/app_header.dart';
 import '../../../widgets/design_width.dart';
 import '../../../widgets/fade_slideshow.dart';
 import '../../../widgets/responsive.dart';
@@ -98,11 +99,13 @@ class HeroSection extends StatelessWidget {
                       spacing: isMobile ? 12 : 30,
                       runSpacing: 12,
                       children: [
-                        AppButton(label: '내 소재 등록하기', onPressed: () {}),
+                        // TODO(DAY 4): 3.1 내 소재 탐색 화면 연결
+                        const AppButton(label: '내 소재 등록하기'),
                         AppButton(
                           label: '샘플로 미리보기',
                           variant: AppButtonVariant.light,
-                          onPressed: () => SampleResultPage.open(context),
+                          onPressed: () =>
+                              AppHeader.goTo(context, AppRoutes.samples),
                         ),
                       ],
                     ),

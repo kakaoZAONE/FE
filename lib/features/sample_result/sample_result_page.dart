@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 
+import '../../app/app_routes.dart';
 import '../../pages/home/home_assets.dart';
 import '../../widgets/app_button.dart';
+import '../../widgets/app_footer.dart';
 import '../../widgets/design_width.dart';
-import '../../widgets/home_header.dart';
+import '../../widgets/app_header.dart';
 import '../../widgets/responsive.dart';
 
 class SampleResultPage extends StatelessWidget {
@@ -130,10 +132,14 @@ class SampleResultPage extends StatelessWidget {
     'assets/images/7.png',
   ];
 
-  static void open(BuildContext context) {
-    Navigator.of(
-      context,
-    ).push(MaterialPageRoute<void>(builder: (_) => const SampleResultPage()));
+  /// 샘플 결과 목록(`/samples`)으로 이동
+  static void open(BuildContext context) =>
+      AppHeader.goTo(context, AppRoutes.samples);
+
+  /// 메인의 샘플 카드에서 [index]번째 소재 상세를 바로 연다.
+  static void openSample(BuildContext context, int index) {
+    if (index < 0 || index >= _items.length) return open(context);
+    openDetail(context, _items[index]);
   }
 
   static void openDetail(BuildContext context, _Item item) {
@@ -151,7 +157,7 @@ class SampleResultPage extends StatelessWidget {
       body: SingleChildScrollView(
         child: Column(
           children: [
-            const HomeHeader(),
+            const AppHeader(),
             _Section(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -168,7 +174,7 @@ class SampleResultPage extends StatelessWidget {
                   ),
                   const SizedBox(height: 12),
                   const Text(
-                    '기업 소재를 가정해 자원도감이 미리 만들었습니다. 해외 기관의 실제 활용 사례도 함께 볼 수 있어요',
+                    '기업 소재를 가정해 자원도감이 미리 만들었습니다.',
                     style: TextStyle(color: muted, fontSize: 16, height: 1.5),
                   ),
                   const SizedBox(height: 48),
@@ -180,7 +186,7 @@ class SampleResultPage extends StatelessWidget {
               ),
             ),
             const _ContactCards(),
-            const _Footer(),
+            const AppFooter(),
           ],
         ),
       ),
@@ -454,19 +460,21 @@ class _InfoCard extends StatelessWidget {
           fontWeight: FontWeight.w600,
         );
 
+        // 글자가 길어 줄바꿈되는 폭에서도 넘치지 않도록 최소 높이로 둔다.
         return Container(
-          height: height,
+          constraints: BoxConstraints(minHeight: height),
           padding: EdgeInsets.fromLTRB(padding, 36, padding, 32),
           color: dark ? SampleResultPage.ink : const Color(0xFFF1F2F3),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text(label, style: TextStyle(color: fg, fontSize: 13)),
               SizedBox(height: compact ? 28 : 42),
               Text(title, style: titleStyle),
               const SizedBox(height: 10),
               Text(description, style: bodyStyle),
-              const Spacer(),
+              SizedBox(height: compact ? 28 : 40),
               Container(
                 height: compact ? 40 : 48,
                 padding: EdgeInsets.symmetric(horizontal: compact ? 18 : 24),
@@ -509,78 +517,6 @@ class _CutCornerClipper extends CustomClipper<Path> {
   bool shouldReclip(covariant CustomClipper<Path> oldClipper) => false;
 }
 
-class _Footer extends StatelessWidget {
-  const _Footer();
-
-  @override
-  Widget build(BuildContext context) {
-    const small = TextStyle(
-      color: Color(0xFF9AA0A6),
-      fontSize: 11,
-      height: 1.6,
-    );
-
-    return _Section(
-      child: Padding(
-        padding: const EdgeInsets.symmetric(vertical: 48),
-        child: Row(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Row(
-                    children: [
-                      Text(
-                        'ZAONE LAB',
-                        style: TextStyle(
-                          color: SampleResultPage.ink,
-                          fontSize: 14,
-                          fontWeight: FontWeight.w900,
-                        ),
-                      ),
-                      SizedBox(width: 12),
-                      Text(
-                        '협업 설명서',
-                        style: TextStyle(
-                          color: SampleResultPage.ink,
-                          fontSize: 12,
-                          fontWeight: FontWeight.w700,
-                        ),
-                      ),
-                    ],
-                  ),
-                  SizedBox(height: 8),
-                  Text(
-                    '카카오(ZAONE) × Bripoly · 카카오임팩트 Tech for Impact',
-                    style: small,
-                  ),
-                ],
-              ),
-            ),
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.end,
-              children: const [
-                Text(
-                  '이용약관   개인정보처리방침   제휴 및 문의',
-                  style: TextStyle(
-                    color: SampleResultPage.ink,
-                    fontSize: 11,
-                    fontWeight: FontWeight.w600,
-                  ),
-                ),
-                SizedBox(height: 8),
-                Text('© ZAONE. All rights reserved.', style: small),
-              ],
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-}
-
 class _SampleResultDetailPage extends StatefulWidget {
   const _SampleResultDetailPage({required this.item});
 
@@ -615,7 +551,7 @@ class _SampleResultDetailPageState extends State<_SampleResultDetailPage> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            const HomeHeader(),
+            const AppHeader(),
             _Section(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -702,7 +638,7 @@ class _SampleResultDetailPageState extends State<_SampleResultDetailPage> {
               ),
             ),
             const _ContactCards(),
-            const _Footer(),
+            const AppFooter(),
           ],
         ),
       ),
