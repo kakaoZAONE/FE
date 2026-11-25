@@ -38,17 +38,11 @@ abstract final class AppRoutes {
     final path = _normalize(settings.name);
     if (path.startsWith('$history/')) {
       final id = path.substring(history.length + 1);
-      return MaterialPageRoute<void>(
-        builder: (_) => HistoryDetailPage(resultId: id),
-        settings: settings,
-      );
+      return _page(HistoryDetailPage(resultId: id), settings);
     }
     if (path.startsWith('/result/')) {
       final id = path.substring('/result/'.length);
-      return MaterialPageRoute<void>(
-        builder: (_) => ResultPage(resultId: id),
-        settings: settings,
-      );
+      return _page(ResultPage(resultId: id), settings);
     }
     final page = switch (path) {
       samples => const SampleResultPage(),
@@ -63,8 +57,18 @@ abstract final class AppRoutes {
       // 알 수 없는 주소는 메인으로
       _ => const HomePage(),
     };
-    return MaterialPageRoute<void>(builder: (_) => page, settings: settings);
+    return _page(page, settings);
   }
+
+  /// 일반 웹사이트처럼 애니메이션 없이 바로 화면을 바꾼다.
+  /// (MaterialPageRoute 기본 전환은 앱처럼 화면이 확대되며 넘어간다)
+  static Route<void> _page(Widget page, RouteSettings settings) =>
+      PageRouteBuilder<void>(
+        settings: settings,
+        pageBuilder: (_, _, _) => page,
+        transitionDuration: Duration.zero,
+        reverseTransitionDuration: Duration.zero,
+      );
 
   /// '/samples/' · '/samples?x=1' 처럼 들어와도 같은 화면으로 본다.
   static String _normalize(String? name) {
