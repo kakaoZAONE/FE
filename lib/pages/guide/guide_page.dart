@@ -165,6 +165,8 @@ class _StepGrid extends StatelessWidget {
       }
       rows.add(
         DecoratedBox(
+          // 카드 배경 위에 그려야 줄 전체에 보인다
+          position: DecorationPosition.foreground,
           decoration: const BoxDecoration(
             border: Border(bottom: BorderSide(color: AppColors.gray500)),
           ),
