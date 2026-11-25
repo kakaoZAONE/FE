@@ -6,7 +6,6 @@ import '../../../theme/app_text_styles.dart';
 import '../../../widgets/app_button.dart';
 import '../../../widgets/app_header.dart';
 import '../../../widgets/design_width.dart';
-import '../../../widgets/fade_slideshow.dart';
 import '../../../widgets/responsive.dart';
 import '../home_assets.dart';
 
@@ -51,9 +50,13 @@ class HeroSection extends StatelessWidget {
     // 높이는 최소값(데스크톱 680). 글자가 길어 넘치면 그만큼 늘어나고, 글자는 아래에 붙는다.
     return Stack(
       children: [
-        // 원본 + AI 시안 3장, 5초마다 페이드 전환
-        const Positioned.fill(
-          child: FadeSlideshow(images: HomeAssets.heroSlides),
+        // Figma 최종: 정지 이미지 1장
+        Positioned.fill(
+          child: Image.asset(
+            HomeAssets.hero,
+            fit: BoxFit.cover,
+            alignment: Alignment.center,
+          ),
         ),
         const Positioned.fill(
           child: DecoratedBox(
@@ -99,8 +102,11 @@ class HeroSection extends StatelessWidget {
                       spacing: isMobile ? 12 : 30,
                       runSpacing: 12,
                       children: [
-                        // TODO(DAY 4): 3.1 내 소재 탐색 화면 연결
-                        const AppButton(label: '내 소재 등록하기'),
+                        AppButton(
+                          label: '내 소재 등록하기',
+                          onPressed: () =>
+                              AppHeader.goTo(context, AppRoutes.register),
+                        ),
                         AppButton(
                           label: '샘플로 미리보기',
                           variant: AppButtonVariant.light,

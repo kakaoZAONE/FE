@@ -38,6 +38,8 @@ dependencies:
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^1.0.8
   url_launcher: ^6.3.3
+  # 웹 파일 선택(내 소재 사진 등록) — url_launcher_web이 이미 쓰는 패키지
+  web: ^1.1.1
 
 dev_dependencies:
   flutter_test:
