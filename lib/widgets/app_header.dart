@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../app/app_routes.dart';
+import '../features/auth/auth_state.dart';
 import '../pages/home/home_assets.dart';
 import '../theme/app_colors.dart';
 import '../theme/app_text_styles.dart';
@@ -28,20 +29,30 @@ class AppHeader extends StatelessWidget {
     final pad = Responsive.pagePadding(context);
 
     final logo = _Logo(onTap: () => goHome(context));
-    final actions = Row(
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        AppButton(
-          label: 'Log in',
-          variant: AppButtonVariant.outline,
-          onPressed: () => showLoginDialog(context),
-        ),
-        SizedBox(width: size == ScreenSize.mobile ? 8 : 24),
-        AppButton(
-          label: size == ScreenSize.mobile ? '소재 등록' : '내 소재 등록하기',
-          // TODO(DAY 4): 3.1 내 소재 탐색 화면 연결
-        ),
-      ],
+    // 로그인 전: [Log in] / 로그인 후: [내 탐색기록] (Figma C1-1 · C2_b-1)
+    final actions = ListenableBuilder(
+      listenable: AuthState.instance,
+      builder: (context, _) => Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          AuthState.instance.isSignedIn
+              ? AppButton(
+                  label: size == ScreenSize.mobile ? '기록' : '내 탐색기록',
+                  variant: AppButtonVariant.outline,
+                  onPressed: () => goTo(context, AppRoutes.history),
+                )
+              : AppButton(
+                  label: 'Log in',
+                  variant: AppButtonVariant.outline,
+                  onPressed: () => showLoginDialog(context),
+                ),
+          SizedBox(width: size == ScreenSize.mobile ? 8 : 24),
+          AppButton(
+            label: size == ScreenSize.mobile ? '소재 등록' : '내 소재 등록하기',
+            onPressed: () => goTo(context, AppRoutes.register),
+          ),
+        ],
+      ),
     );
     final nav = _NavLinks(compact: !isDesktop);
 
@@ -168,18 +179,25 @@ class _NavLinks extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final items = <(String, VoidCallback?)>[
-      ('샘플 둘러보기', () => AppHeader.goTo(context, AppRoutes.samples)),
-      // TODO(DAY 2): 1.3 이용안내 · 1.4 자원랩 소개 화면 연결
-      ('이용 안내', null),
-      ('자원랩 소개', null),
+    final items = <(String, String)>[
+      ('샘플 둘러보기', AppRoutes.samples),
+      ('이용 안내', AppRoutes.guide),
+      ('자원랩 소개', AppRoutes.about),
     ];
+    // 메뉴 화면에 있으면 그 메뉴만 진하게(gray/800), 나머지는 gray/300 (Figma A3·A4)
+    final current = ModalRoute.of(context)?.settings.name;
+    final onMenuPage = items.any((e) => e.$2 == current);
     return Row(
       mainAxisSize: MainAxisSize.min,
       children: [
         for (var i = 0; i < items.length; i++) ...[
           if (i > 0) SizedBox(width: compact ? 4 : 30),
-          _NavLink(label: items[i].$1, onTap: items[i].$2, compact: compact),
+          _NavLink(
+            label: items[i].$1,
+            onTap: () => AppHeader.goTo(context, items[i].$2),
+            compact: compact,
+            dimmed: onMenuPage && items[i].$2 != current,
+          ),
         ],
       ],
     );
@@ -187,11 +205,17 @@ class _NavLinks extends StatelessWidget {
 }
 
 class _NavLink extends StatefulWidget {
-  const _NavLink({required this.label, this.onTap, this.compact = false});
+  const _NavLink({
+    required this.label,
+    this.onTap,
+    this.compact = false,
+    this.dimmed = false,
+  });
 
   final String label;
   final VoidCallback? onTap;
   final bool compact;
+  final bool dimmed;
 
   @override
   State<_NavLink> createState() => _NavLinkState();
@@ -205,7 +229,9 @@ class _NavLinkState extends State<_NavLink> {
     final enabled = widget.onTap != null;
     final style = AppTextStyles.title18.copyWith(
       fontSize: widget.compact ? 15 : 18,
-      color: _hovered ? AppColors.gray900 : AppColors.gray800,
+      color: _hovered
+          ? AppColors.gray900
+          : (widget.dimmed ? AppColors.gray300 : AppColors.gray800),
     );
     return Semantics(
       link: true,

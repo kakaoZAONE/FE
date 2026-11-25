@@ -5,7 +5,6 @@ import '../../widgets/app_header.dart';
 import '../../widgets/design_width.dart';
 import '../../widgets/fast_wheel_scroll.dart';
 import '../../widgets/responsive.dart';
-import '../../widgets/reveal_on_scroll.dart';
 import 'sections/contact_section.dart';
 import 'sections/hero_section.dart';
 import 'sections/process_section.dart';
@@ -59,15 +58,14 @@ class HomePage extends StatelessWidget {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: [
-                      // 섹션마다 화면에 들어올 때 한 번씩 떠오르며 나타남
                       // 최종 Figma 순서: 샘플 → 이용 과정 → 활용 방식 → 문의
-                      const RevealOnScroll(child: SampleSection()),
+                      const SampleSection(),
                       SizedBox(height: sectionGap),
-                      const RevealOnScroll(child: ProcessSection()),
+                      const ProcessSection(),
                       SizedBox(height: sectionGap),
-                      const RevealOnScroll(child: SceneSection()),
+                      const SceneSection(),
                       SizedBox(height: sectionGap / 1.6),
-                      const RevealOnScroll(child: ContactSection()),
+                      const ContactSection(),
                     ],
                   ),
                 ),

@@ -1,5 +1,13 @@
 # 진행 현황
 
+## 2026-11-25 — Figma 최종 전체 구현 (1차)
+- **배포:** Vercel 프로젝트 `zaone-fe`(likelion-13th 팀)를 kakaoZAONE/FE에 Git 연동. main push 시 자동 배포 → https://zaone-fe.vercel.app
+- **구현:** 이용안내 · 자원랩 소개 · 데이터 처리 안내 · 로그인/회원가입/서비스 안내 · 내 소재 등록(B1~B7) · 결과(C1~C4) · 샘플 목록/상세 · 내 탐색 기록
+- **Mock:** 인증(`AuthState`), 분석·장면 생성(`MockMaterialApi`), 저장(`ResultStore`) — 모두 메모리, 새로고침 시 초기화
+- **새 의존성:** `web`(이미 url_launcher_web이 쓰던 패키지, 파일 선택·인쇄용)
+- **남은 일:** 빌드 확인 · 화면별 1440 대조 QA · 폰트 서브셋 재생성(`FORCE=1 bash tool/subset_fonts.sh`) · Figma SVG 아이콘/자원랩 사진 교체 · 백엔드 API 연결
+
+
 ## 2026-11-24 · DAY 1 — 프로젝트 기반 · 메인
 - **브랜치:** `feat/figma-final-ui` (main `6e87804`에서 분기)
 - **완료한 화면:** 1.1 main 최종 Figma 반영

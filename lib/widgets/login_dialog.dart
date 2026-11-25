@@ -1,19 +1,22 @@
 import 'package:flutter/material.dart';
 
+import '../app/app_routes.dart';
+import '../features/auth/auth_state.dart';
 import '../theme/app_colors.dart';
-import '../theme/app_text_styles.dart';
-import 'app_button.dart';
+import 'form_widgets.dart';
 
-/// Figma `4.2 로그인` — 로그인 작은 창
+/// Figma `D1 로그인` 창 (1100:8026 · D1-1 입력 · D1-2 오류 · D1-3 완료)
 ///
-/// 배경 dim rgba(15,17,21,0.55), 창 폭 418, 아래에 [나가기] [로그인] 버튼.
-/// 아직 서버 연동 전이라 로그인을 누르면 입력 확인 후 안내만 띄운다.
-Future<void> showLoginDialog(BuildContext context) {
-  return showDialog<void>(
+/// 폭 562, 안쪽 위 40 · 좌우 40 · 아래 20, 요소 간격 40, dim rgba(15,17,21,0.55).
+/// 이메일·비밀번호를 다 입력해야 [로그인]이 켜진다(그 전에는 30% 불투명).
+/// 로그인에 성공하면 true를 돌려준다.
+Future<bool> showLoginDialog(BuildContext context) async {
+  final result = await showDialog<bool>(
     context: context,
     barrierColor: const Color(0x8C0F1115),
     builder: (_) => const _LoginDialog(),
   );
+  return result ?? false;
 }
 
 class _LoginDialog extends StatefulWidget {
@@ -24,195 +27,157 @@ class _LoginDialog extends StatefulWidget {
 }
 
 class _LoginDialogState extends State<_LoginDialog> {
-  final _company = TextEditingController();
+  final _email = TextEditingController();
   final _password = TextEditingController();
   String? _error;
+  bool _busy = false;
+
+  bool get _filled => _email.text.trim().isNotEmpty && _password.text.isNotEmpty;
 
   @override
   void dispose() {
-    _company.dispose();
+    _email.dispose();
     _password.dispose();
     super.dispose();
   }
 
-  void _submit() {
-    if (_company.text.trim().isEmpty || _password.text.isEmpty) {
-      setState(() => _error = '기업명과 비밀번호를 모두 입력해 주세요');
+  Future<void> _submit() async {
+    if (!_filled || _busy) return;
+    setState(() => _busy = true);
+    final error = await AuthState.instance.signIn(
+      email: _email.text,
+      password: _password.text,
+    );
+    if (!mounted) return;
+    if (error != null) {
+      setState(() {
+        _busy = false;
+        _error = error;
+      });
       return;
     }
-    // TODO: 로그인 API 연결
-    final messenger = ScaffoldMessenger.of(context);
-    Navigator.of(context).pop();
-    messenger.showSnackBar(const SnackBar(content: Text('로그인 기능은 준비 중이에요')));
+    Navigator.of(context).pop(true);
+  }
+
+  void _kakao() {
+    // TODO(API): 카카오 OAuth 연동 전 — 안내만 표시 (docs/API.md)
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(content: Text('카카오 로그인은 준비 중이에요')),
+    );
   }
 
   @override
   Widget build(BuildContext context) {
+    final hasError = _error != null;
     return Dialog(
       backgroundColor: Colors.transparent,
       elevation: 0,
       insetPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 24),
       child: ConstrainedBox(
-        constraints: const BoxConstraints(maxWidth: 418),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            Container(
-              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 40),
-              decoration: BoxDecoration(
-                color: AppColors.screen,
-                border: Border.all(color: AppColors.gray900),
-                borderRadius: BorderRadius.circular(2),
-                boxShadow: const [
-                  BoxShadow(
-                    color: Color(0x2E000000),
-                    offset: Offset(0, 20),
-                    blurRadius: 24,
-                  ),
-                ],
+        constraints: const BoxConstraints(maxWidth: 562),
+        child: Container(
+          padding: const EdgeInsets.fromLTRB(40, 40, 40, 20),
+          decoration: BoxDecoration(
+            color: AppColors.screen,
+            borderRadius: BorderRadius.circular(2),
+            boxShadow: const [
+              BoxShadow(
+                color: Color(0x1742475B),
+                offset: Offset(0, 18),
+                blurRadius: 22.5,
               ),
-              child: Column(
-                children: [
-                  const Text(
-                    '로그인',
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                      fontFamily: AppFonts.pretendard,
-                      fontWeight: FontWeight.w600,
-                      fontSize: 24,
-                      letterSpacing: -0.48,
-                      color: Color(0xFF040404),
-                    ),
-                  ),
-                  const SizedBox(height: 40),
-                  _LabeledField(
-                    label: '기업명',
-                    hint: '기업명을 입력해 주세요',
-                    controller: _company,
-                    autofocus: true,
-                    onSubmitted: (_) => _submit(),
-                  ),
-                  const SizedBox(height: 30),
-                  _LabeledField(
-                    label: '비밀번호',
-                    hint: '비밀번호를 입력해 주세요',
-                    controller: _password,
-                    obscure: true,
-                    onSubmitted: (_) => _submit(),
-                  ),
-                  const SizedBox(height: 40),
-                  Text(
-                    _error ?? '샘플 탐색은 로그인 없이 이용할 수 있어요',
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                      fontFamily: AppFonts.pretendard,
-                      fontSize: 13,
-                      letterSpacing: -0.65,
-                      color: _error != null
-                          ? const Color(0xFFE00052)
-                          : const Color(0xFF62656D),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            const SizedBox(height: 10),
-            Row(
+            ],
+          ),
+          child: SingleChildScrollView(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
-                Expanded(
-                  child: AppButton(
-                    label: '나가기',
-                    variant: AppButtonVariant.light,
-                    foregroundColor: AppColors.gray400,
-                    expand: true,
-                    onPressed: () => Navigator.of(context).pop(),
+                const Text(
+                  '로그인',
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    fontFamily: 'Pretendard',
+                    fontWeight: FontWeight.w600,
+                    fontSize: 24,
+                    letterSpacing: -0.48,
+                    color: Color(0xFF040404),
                   ),
                 ),
-                const SizedBox(width: 8),
-                Expanded(
-                  child: AppButton(
-                    label: '로그인',
-                    expand: true,
-                    onPressed: _submit,
+                const SizedBox(height: 40),
+                LabeledInput(
+                  label: '이메일',
+                  controller: _email,
+                  autofocus: true,
+                  error: hasError,
+                  keyboardType: TextInputType.emailAddress,
+                  onChanged: (_) => setState(() => _error = null),
+                  onSubmitted: (_) => _submit(),
+                ),
+                const SizedBox(height: 10),
+                LabeledInput(
+                  label: '비밀번호',
+                  controller: _password,
+                  obscure: true,
+                  error: hasError,
+                  onChanged: (_) => setState(() => _error = null),
+                  onSubmitted: (_) => _submit(),
+                ),
+                const SizedBox(height: 30),
+                KakaoButton(onPressed: _kakao),
+                if (hasError) ...[
+                  const SizedBox(height: 20),
+                  Text(
+                    _error!,
+                    textAlign: TextAlign.center,
+                    style: const TextStyle(
+                      fontFamily: 'Pretendard',
+                      fontSize: 13,
+                      letterSpacing: -0.26,
+                      color: kErrorColor,
+                    ),
+                  ),
+                ],
+                const SizedBox(height: 40),
+                // 버튼 줄: 위 24 (Figma pt-24), 사이 8
+                Padding(
+                  padding: const EdgeInsets.only(top: 24),
+                  child: Row(
+                    children: [
+                      Expanded(
+                        child: FillButton(
+                          label: '취소',
+                          muted: true,
+                          onPressed: () => Navigator.of(context).pop(false),
+                        ),
+                      ),
+                      const SizedBox(width: 8),
+                      Expanded(
+                        child: FillButton(
+                          label: '로그인',
+                          onPressed: _filled && !hasError ? _submit : null,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                const SizedBox(height: 40),
+                Center(
+                  child: InlineLinkRow(
+                    text: '처음이신가요?',
+                    link: '계정 만들기',
+                    onTap: () {
+                      final navigator = Navigator.of(context);
+                      navigator.pop(false);
+                      navigator.pushNamed(AppRoutes.signup);
+                    },
                   ),
                 ),
               ],
             ),
-          ],
-        ),
-      ),
-    );
-  }
-}
-
-/// Figma `input` — 라벨 13 + 입력칸 높이 45, 보더 #D9DCE1, radius 4
-class _LabeledField extends StatelessWidget {
-  const _LabeledField({
-    required this.label,
-    required this.hint,
-    required this.controller,
-    this.obscure = false,
-    this.autofocus = false,
-    this.onSubmitted,
-  });
-
-  final String label;
-  final String hint;
-  final TextEditingController controller;
-  final bool obscure;
-  final bool autofocus;
-  final ValueChanged<String>? onSubmitted;
-
-  static const _border = OutlineInputBorder(
-    borderRadius: BorderRadius.all(Radius.circular(4)),
-    borderSide: BorderSide(color: Color(0xFFD9DCE1)),
-  );
-
-  @override
-  Widget build(BuildContext context) {
-    const textStyle = TextStyle(
-      fontFamily: AppFonts.pretendard,
-      fontSize: 15,
-      letterSpacing: -0.3,
-      color: AppColors.gray900,
-    );
-
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          label,
-          style: AppTextStyles.body13.copyWith(color: AppColors.gray900),
-        ),
-        const SizedBox(height: 10),
-        SizedBox(
-          height: 45,
-          child: TextField(
-            controller: controller,
-            obscureText: obscure,
-            autofocus: autofocus,
-            onSubmitted: onSubmitted,
-            style: textStyle,
-            cursorColor: AppColors.gray900,
-            decoration: InputDecoration(
-              hintText: hint,
-              hintStyle: textStyle.copyWith(color: AppColors.gray400),
-              filled: true,
-              fillColor: const Color(0x7AFFFFFF),
-              contentPadding: const EdgeInsets.symmetric(
-                horizontal: 10,
-                vertical: 13,
-              ),
-              border: _border,
-              enabledBorder: _border,
-              focusedBorder: _border.copyWith(
-                borderSide: const BorderSide(color: AppColors.gray900),
-              ),
-            ),
           ),
         ),
-      ],
+      ),
     );
   }
 }
