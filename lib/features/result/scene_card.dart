@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../theme/app_colors.dart';
+import '../../theme/app_icons.dart';
 import '../../theme/app_text_styles.dart';
 import '../../widgets/flow_widgets.dart';
 import '../../widgets/form_widgets.dart';
@@ -124,6 +125,7 @@ class _Ready extends StatelessWidget {
           const SizedBox(height: 20),
           IconOutlineButton(
             icon: Icons.refresh,
+            iconAsset: AppIcons.redo,
             label: regenerateLabel,
             onPressed: onRegenerate,
           ),
@@ -149,7 +151,8 @@ class _Ready extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         SizedBox(width: 374, child: text),
-        const SizedBox(width: 73),
+        // 안쪽 폭 1258(= 1320 - 테두리 2 - 패딩 60) - 374 - 813 = 71
+        const SizedBox(width: 71),
         Expanded(child: image),
       ],
     );
@@ -233,6 +236,7 @@ class _Failed extends StatelessWidget {
             const SizedBox(height: 20),
             IconOutlineButton(
               icon: Icons.refresh,
+              iconAsset: AppIcons.redo,
               label: '다시 시도',
               onPressed: onRetry,
               compact: true,

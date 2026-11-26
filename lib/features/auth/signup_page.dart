@@ -2,81 +2,37 @@ import 'package:flutter/material.dart';
 
 import '../../app/app_routes.dart';
 import '../../theme/app_colors.dart';
-import '../../theme/app_text_styles.dart';
 import '../../widgets/design_width.dart';
 import '../../widgets/form_widgets.dart';
 import '../../widgets/login_dialog.dart';
 import '../../widgets/page_scaffold.dart';
 import '../../widgets/responsive.dart';
-import 'auth_state.dart';
+import 'widgets/signup_form.dart';
 
-/// Figma `D2 회원가입` (1100:8369)
+/// Figma `D2 회원가입` (1100:8369) — 주소(/signup)로 바로 들어왔을 때 쓰는 페이지형
 ///
-/// 가운데 카드 562(테두리 gray/100) — 이름 · 이메일 · 비밀번호 · 필수 동의 → 카카오 / 가입.
-/// 가입하면 `D2-2 회원가입 후 로그인` 처럼 로그인된 상태로 이전 화면에 돌아간다.
-class SignupPage extends StatefulWidget {
+/// Figma 프로토타입에서는 결과 화면 위 창으로 뜬다 → [showSignupDialog].
+/// 카드 562(테두리 gray/100), 내용은 [SignupForm]과 같다.
+/// 가입하면 `D2-2 회원가입 후 로그인`처럼 이메일을 채운 로그인 창을 띄우고,
+/// 로그인하면 이전 화면으로 돌아간다.
+class SignupPage extends StatelessWidget {
   const SignupPage({super.key});
 
   @override
-  State<SignupPage> createState() => _SignupPageState();
-}
+  Widget build(BuildContext context) {
+    final pad = Responsive.pagePadding(context);
+    final isDesktop = Responsive.of(context) == ScreenSize.desktop;
 
-class _SignupPageState extends State<SignupPage> {
-  final _name = TextEditingController();
-  final _email = TextEditingController();
-  final _password = TextEditingController();
-  bool _agreed = false;
-  String? _error;
-  bool _busy = false;
-
-  @override
-  void dispose() {
-    _name.dispose();
-    _email.dispose();
-    _password.dispose();
-    super.dispose();
-  }
-
-  bool get _ready =>
-      _agreed &&
-      _name.text.trim().isNotEmpty &&
-      _email.text.trim().isNotEmpty &&
-      _password.text.isNotEmpty;
-
-  Future<void> _submit() async {
-    if (!_ready || _busy) return;
-    setState(() => _busy = true);
-    final error = await AuthState.instance.signUp(
-      name: _name.text,
-      email: _email.text,
-      password: _password.text,
-    );
-    if (!mounted) return;
-    setState(() {
-      _busy = false;
-      _error = error;
-    });
-    if (error == null) {
+    Future<void> login({String? email}) async {
       final navigator = Navigator.of(context);
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('가입이 완료되어 로그인되었어요')),
-      );
+      final ok = await showLoginDialog(context, initialEmail: email);
+      if (!ok) return;
       if (navigator.canPop()) {
         navigator.pop();
       } else {
         navigator.pushReplacementNamed(AppRoutes.home);
       }
     }
-  }
-
-  void _clearError(String _) {
-    setState(() => _error = null);
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    final pad = Responsive.pagePadding(context);
-    final isDesktop = Responsive.of(context) == ScreenSize.desktop;
 
     final card = Container(
       constraints: const BoxConstraints(maxWidth: 562),
@@ -91,87 +47,9 @@ class _SignupPageState extends State<SignupPage> {
         border: Border.all(color: AppColors.gray100),
         borderRadius: BorderRadius.circular(2),
       ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: [
-          const Text(
-            '계정 만들기',
-            textAlign: TextAlign.center,
-            style: TextStyle(
-              fontFamily: AppFonts.pretendard,
-              fontWeight: FontWeight.w600,
-              fontSize: 24,
-              letterSpacing: -0.48,
-              color: Color(0xFF040404),
-            ),
-          ),
-          const SizedBox(height: 40),
-          LabeledInput(
-            label: '성함 또는 담당자명',
-            hint: '예) 김자원',
-            controller: _name,
-            onChanged: _clearError,
-          ),
-          const SizedBox(height: 10),
-          LabeledInput(
-            label: '이메일',
-            hint: 'zaone@company.com',
-            controller: _email,
-            keyboardType: TextInputType.emailAddress,
-            error: _error != null && _error!.contains('이메일'),
-            onChanged: _clearError,
-          ),
-          const SizedBox(height: 10),
-          LabeledInput(
-            label: '비밀번호',
-            hint: '8자 이상 숫자 입력',
-            controller: _password,
-            obscure: true,
-            error: _error != null && _error!.contains('비밀번호'),
-            onChanged: _clearError,
-            onSubmitted: (_) => _submit(),
-          ),
-          const SizedBox(height: 30),
-          _AgreeRow(
-            value: _agreed,
-            onChanged: (v) => setState(() => _agreed = v),
-            onDetail: () =>
-                Navigator.of(context).pushNamed(AppRoutes.serviceInfo),
-          ),
-          const SizedBox(height: 30),
-          KakaoButton(
-            onPressed: () => ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(content: Text('카카오 로그인은 준비 중이에요')),
-            ),
-          ),
-          const SizedBox(height: 10),
-          FillButton(label: '가입하고 시작하기', onPressed: _ready ? _submit : null),
-          if (_error != null) ...[
-            const SizedBox(height: 16),
-            Text(
-              _error!,
-              textAlign: TextAlign.center,
-              style: const TextStyle(
-                fontFamily: AppFonts.pretendard,
-                fontSize: 13,
-                letterSpacing: -0.26,
-                color: kErrorColor,
-              ),
-            ),
-          ],
-          const SizedBox(height: 24),
-          Center(
-            child: InlineLinkRow(
-              text: '이미 계정이 있나요?',
-              link: '로그인',
-              onTap: () async {
-                final navigator = Navigator.of(context);
-                final ok = await showLoginDialog(context);
-                if (ok && navigator.canPop()) navigator.pop();
-              },
-            ),
-          ),
-        ],
+      child: SignupForm(
+        onSignedUp: (email) => login(email: email),
+        onLogin: login,
       ),
     );
 
@@ -197,80 +75,62 @@ class _SignupPageState extends State<SignupPage> {
   }
 }
 
-/// 체크박스 + '(필수)' 동의 문구 + 서비스안내 링크
-class _AgreeRow extends StatelessWidget {
-  const _AgreeRow({
-    required this.value,
-    required this.onChanged,
-    required this.onDetail,
-  });
+/// 회원가입 창의 결과
+sealed class SignupOutcome {
+  const SignupOutcome();
+}
 
-  final bool value;
-  final ValueChanged<bool> onChanged;
-  final VoidCallback onDetail;
+/// 가입 완료 — 이 이메일로 로그인 창(D2-2)을 연다
+final class SignedUp extends SignupOutcome {
+  const SignedUp(this.email);
+  final String email;
+}
 
-  @override
-  Widget build(BuildContext context) {
-    return Row(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Semantics(
-          checked: value,
-          label: '서비스 이용 안내와 AI·데이터 처리 안내 동의',
-          child: MouseRegion(
-            cursor: SystemMouseCursors.click,
-            child: GestureDetector(
-              onTap: () => onChanged(!value),
-              child: Container(
-                width: 22,
-                height: 22,
-                decoration: BoxDecoration(
-                  color: value ? AppColors.gray900 : AppColors.screen,
-                  border: Border.all(color: AppColors.gray900),
-                  borderRadius: BorderRadius.circular(3),
+/// '이미 계정이 있나요? 로그인'
+final class BackToLogin extends SignupOutcome {
+  const BackToLogin();
+}
+
+/// Figma `D2 회원가입` 창 (1100:8485) — 562, 테두리 gray/100, 안쪽 40 · 40 · 20
+///
+/// 창 밖을 누르면 닫히고 null을 돌려준다.
+Future<SignupOutcome?> showSignupDialog(BuildContext context) =>
+    showDialog<SignupOutcome>(
+      context: context,
+      barrierColor: const Color(0x8C0F1115),
+      builder: (dialogContext) {
+        final isMobile = Responsive.of(dialogContext) == ScreenSize.mobile;
+        return Dialog(
+          backgroundColor: Colors.transparent,
+          elevation: 0,
+          insetPadding: const EdgeInsets.symmetric(
+            horizontal: 20,
+            vertical: 24,
+          ),
+          child: ConstrainedBox(
+            constraints: const BoxConstraints(maxWidth: 562),
+            child: Container(
+              decoration: BoxDecoration(
+                color: AppColors.screen,
+                border: Border.all(color: AppColors.gray100),
+                borderRadius: BorderRadius.circular(2),
+              ),
+              child: SingleChildScrollView(
+                padding: EdgeInsets.fromLTRB(
+                  isMobile ? 19 : 39,
+                  39,
+                  isMobile ? 19 : 39,
+                  19,
                 ),
-                child: value
-                    ? const Icon(Icons.check, size: 16, color: Colors.white)
-                    : null,
+                child: SignupForm(
+                  onSignedUp: (email) =>
+                      Navigator.of(dialogContext).pop(SignedUp(email)),
+                  onLogin: () =>
+                      Navigator.of(dialogContext).pop(const BackToLogin()),
+                ),
               ),
             ),
           ),
-        ),
-        const SizedBox(width: 8),
-        Expanded(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              GestureDetector(
-                onTap: () => onChanged(!value),
-                child: Text(
-                  '서비스 이용 안내와 AI·데이터 처리 안내에 동의합니다.(필수)',
-                  style: AppTextStyles.body13.copyWith(
-                    fontSize: 14,
-                    fontWeight: FontWeight.w500,
-                    color: AppColors.gray900,
-                    height: 22 / 14,
-                  ),
-                ),
-              ),
-              const SizedBox(height: 2),
-              MouseRegion(
-                cursor: SystemMouseCursors.click,
-                child: GestureDetector(
-                  onTap: onDetail,
-                  child: Text(
-                    '자세한 내용은 서비스안내 페이지에서 확인할 수 있습니다. >',
-                    style: AppTextStyles.body13.copyWith(
-                      fontSize: 10,
-                      color: AppColors.gray400,
-                    ),
-                  ),
-                ),
-              ),
-            ],
-          ),
-        ),
-      ],
+        );
+      },
     );
-  }
-}

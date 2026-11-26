@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../../app/app_routes.dart';
 import '../../core/external_links.dart';
 import '../../theme/app_colors.dart';
+import '../../theme/app_icons.dart';
 import '../../theme/app_text_styles.dart';
 import '../../widgets/app_button.dart';
 import '../../widgets/app_header.dart';
@@ -28,8 +29,8 @@ class AboutPage extends StatelessWidget {
     final isDesktop = Responsive.of(context) == ScreenSize.desktop;
 
     return PageScaffold(
-      // Contact 배너 아래 ~ 푸터: 3392 - (111 + 3224) = 57
-      bottomGap: 57,
+      // Contact 배너 배경(289) 아래 ~ 푸터: 3392 - (111 + 2910 + 289) = 82
+      bottomGap: 82,
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
@@ -54,7 +55,9 @@ class AboutPage extends StatelessWidget {
                           title: '자원 ZAONE',
                           body: TextSpan(
                             children: [
-                              TextSpan(text: '비영리 기관으로 생산·유통 과정에서 다음 쓰임을 찾지 못한 '),
+                              TextSpan(
+                                text: '비영리 기관으로 생산·유통 과정에서 다음 쓰임을 찾지 못한 ',
+                              ),
                               TextSpan(
                                 text: '휴면자원',
                                 style: TextStyle(fontWeight: FontWeight.w700),
@@ -84,6 +87,8 @@ class AboutPage extends StatelessWidget {
                 Padding(
                   padding: EdgeInsets.symmetric(horizontal: pad),
                   child: NotchBanner(
+                    // 피그마 배경 div 높이 289 (마스크 그룹 314보다 낮음)
+                    minHeight: 0,
                     eyebrow: 'Contact',
                     title: 'ZAONE LAB과 함께하고 싶다면',
                     body:
@@ -91,7 +96,8 @@ class AboutPage extends StatelessWidget {
                         '실제 소재 제공과 교육 활용은 자원랩의 공식 협의로 진행돼요.',
                     action: AppButton(
                       label: 'ZAONE LAB 바로가기',
-                      onPressed: () => ExternalLinks.open(ExternalLinks.zaoneLab),
+                      onPressed: () =>
+                          ExternalLinks.open(ExternalLinks.zaoneLab),
                     ),
                   ),
                 ),
@@ -128,6 +134,7 @@ class _AboutHero extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final isMobile = Responsive.of(context) == ScreenSize.mobile;
+    final isDesktop = Responsive.of(context) == ScreenSize.desktop;
     final padH = Responsive.value<double>(
       context,
       desktop: 80,
@@ -173,10 +180,17 @@ class _AboutHero extends StatelessWidget {
           ),
           DesignWidth(
             child: Padding(
-              padding: EdgeInsets.fromLTRB(padH, 0, padH, isMobile ? 40 : 0),
+              // 피그마(1096:6107): 글자 묶음 left 80 · top 309 / 640
+              padding: EdgeInsets.fromLTRB(
+                padH,
+                isDesktop ? 309 : 0,
+                padH,
+                isMobile ? 40 : 0,
+              ),
               child: Align(
-                // 피그마: 글자 묶음 top 309 / 640
-                alignment: isMobile
+                alignment: isDesktop
+                    ? Alignment.topLeft
+                    : isMobile
                     ? Alignment.bottomLeft
                     : const Alignment(-1, 0.62),
                 child: Column(
@@ -245,37 +259,38 @@ class _OrgCard extends StatelessWidget {
           image: HomeAssets.processCard,
           tag: tag,
           aspectRatio: 640 / 333,
-          alignment: Alignment.topCenter,
+          // Figma 1094:5906: 1000x928 사진을 640x428로 늘려 채우고 위 333만 보임
+          fillAspectRatio: 640 / 427.81,
         ),
         LeftRuleCard(
-            // 피그마 설명 칸 높이 249 (데스크톱)
-            height: Responsive.of(context) == ScreenSize.desktop ? 249 : null,
-            padding: const EdgeInsets.all(20),
-            gap: 20,
-            children: [
-              Text(
-                title,
-                style: const TextStyle(
-                  fontFamily: AppFonts.pretendard,
-                  fontWeight: FontWeight.w600,
-                  fontSize: 28,
-                  height: AppTextStyles.pretendardNormal,
-                  letterSpacing: -0.56,
-                  color: AppColors.gray900,
-                ),
+          // 피그마 설명 칸 높이 249 (데스크톱)
+          height: Responsive.of(context) == ScreenSize.desktop ? 249 : null,
+          padding: const EdgeInsets.all(20),
+          gap: 20,
+          children: [
+            Text(
+              title,
+              style: const TextStyle(
+                fontFamily: AppFonts.pretendard,
+                fontWeight: FontWeight.w600,
+                fontSize: 28,
+                height: AppTextStyles.pretendardNormal,
+                letterSpacing: -0.56,
+                color: AppColors.gray900,
               ),
-              Text.rich(
-                body,
-                style: const TextStyle(
-                  fontFamily: AppFonts.pretendard,
-                  fontWeight: FontWeight.w500,
-                  fontSize: 18,
-                  height: 1.5,
-                  color: AppColors.gray900,
-                ),
+            ),
+            Text.rich(
+              body,
+              style: const TextStyle(
+                fontFamily: AppFonts.pretendard,
+                fontWeight: FontWeight.w500,
+                fontSize: 18,
+                height: 1.5,
+                color: AppColors.gray900,
               ),
-            ],
-          ),
+            ),
+          ],
+        ),
       ],
     );
   }
@@ -386,6 +401,8 @@ class _Journey extends StatelessWidget {
                     fontFamily: AppFonts.notoSansKr,
                     fontWeight: FontWeight.w700,
                     fontSize: 24,
+                    // 피그마 카드 높이 582 = 사진 428 + 글 154 → 제목 줄 높이 약 28.8
+                    height: 1.2,
                     letterSpacing: -0.48,
                     color: AppColors.gray900,
                   ),
@@ -439,7 +456,8 @@ class _DormantNote extends StatelessWidget {
     const label = Row(
       mainAxisSize: MainAxisSize.min,
       children: [
-        Icon(Icons.inventory_2_outlined, size: 28, color: AppColors.gray900),
+        // Figma glyphs:box-1 (1100:6124) — SVG를 40px 기준 3배 PNG로 변환
+        Image(image: AssetImage(AppIcons.box), width: 40, height: 40),
         SizedBox(width: 10),
         Text(
           '휴면자원이란?',
@@ -478,7 +496,11 @@ class _DormantNote extends StatelessWidget {
               children: [label, SizedBox(height: 12), desc],
             )
           : const Row(
-              children: [label, SizedBox(width: 24), Expanded(child: desc)],
+              children: [
+                label,
+                SizedBox(width: 24),
+                Expanded(child: desc),
+              ],
             ),
     );
   }

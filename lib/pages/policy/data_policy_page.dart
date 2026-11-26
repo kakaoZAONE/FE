@@ -1,36 +1,24 @@
 import 'package:flutter/material.dart';
 
 import '../../app/app_routes.dart';
-import '../../theme/app_colors.dart';
-import '../../theme/app_text_styles.dart';
 import '../../widgets/app_header.dart';
 import '../../widgets/design_width.dart';
 import '../../widgets/page_scaffold.dart';
 import '../../widgets/responsive.dart';
+import 'widgets/policy_widgets.dart';
 
 /// Figma `A5 이용 및 데이터 처리 안내 · 공개` (982:5234)
 ///
-/// 이 화면만 Noto Sans KR 와 별도 색(보라 번호, 연노랑 안내)을 쓴다. Figma 그대로 옮겼다.
+/// Figma는 모든 요소가 절대 좌표라서, 세로 간격은 '다음 요소 top - 이 요소 top'
+/// 높이의 칸([PolicySlot])과 Figma 상자 높이로 맞췄다. (1440 기준 y값은 주석 참고)
 class DataPolicyPage extends StatelessWidget {
   const DataPolicyPage({super.key});
 
-  static const _ink = Color(0xFF1A1C1F);
-  static const _muted = Color(0xFF636B73);
-  static const _subtle = Color(0xFF697078);
-  static const _purple = Color(0xFF633DC7);
-  static const _cardBg = Color(0xFFF4F6F7);
-  static const _rule = Color(0xFFDEE0E3);
-
-  static TextStyle _noto(
-    double size, {
-    FontWeight weight = FontWeight.w400,
-    Color color = AppColors.gray900,
-  }) => TextStyle(
-    fontFamily: AppFonts.notoSansKr,
-    fontWeight: weight,
-    fontSize: size,
-    color: color,
-  );
+  static const _summary = [
+    '샘플·분석·PDF는 로그인 없이',
+    '외부 AI 분석 시작 전 동의',
+    'AI 이미지는 안전성 검증이 아님',
+  ];
 
   static const _policyCards = [
     (
@@ -63,28 +51,44 @@ class DataPolicyPage extends StatelessWidget {
       tablet: 40,
       mobile: 20,
     );
-    final sectionTitle = _noto(
+    final sectionTitle = PolicyStyle.noto(
       isMobile ? 26 : 36,
       weight: FontWeight.w700,
-      color: AppColors.gray900,
     );
 
+    // 152 브레드크럼 → 214 제목 → 349 설명 → 411 구분선
     final intro = Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(
-          'SERVICE & DATA  /  이용 안내',
-          style: _noto(17, weight: FontWeight.w700),
+        PolicySlot(
+          height: isMobile ? 40 : 62,
+          child: Text(
+            'SERVICE & DATA  /  이용 안내',
+            style: PolicyStyle.noto(17, weight: FontWeight.w700),
+          ),
         ),
-        const SizedBox(height: 29),
-        Text(
-          '사진과 AI 데이터를\n어떻게 다루나요?',
-          style: _noto(isMobile ? 32 : 47, weight: FontWeight.w700, color: _ink),
+        PolicySlot(
+          height: isMobile ? 0 : 135,
+          child: Text(
+            '사진과 AI 데이터를\n어떻게 다루나요?',
+            style: PolicyStyle.noto(
+              isMobile ? 32 : 47,
+              weight: FontWeight.w700,
+              color: PolicyStyle.ink,
+            ),
+          ),
         ),
-        const SizedBox(height: 12),
-        Text(
-          '입력할 정보와 AI 결과의 한계를 미리 살펴보세요.\n분석을 시작하기 전에는 외부 AI 전송에 대한 동의를 받습니다.',
-          style: _noto(isMobile ? 16 : 19, color: _subtle),
+        if (isMobile) const SizedBox(height: 12),
+        PolicySlot(
+          height: isDesktop ? 62 : 0,
+          child: Text(
+            '입력할 정보와 AI 결과의 한계를 미리 살펴보세요.\n'
+            '분석을 시작하기 전에는 외부 AI 전송에 대한 동의를 받습니다.',
+            style: PolicyStyle.noto(
+              isMobile ? 16 : 19,
+              color: PolicyStyle.subtle,
+            ),
+          ),
         ),
       ],
     );
@@ -94,103 +98,93 @@ class DataPolicyPage extends StatelessWidget {
       bottomGap: 64,
       body: DesignWidth(
         child: Padding(
+          // 헤더(111) 아래 41 → 브레드크럼 top 152
           padding: EdgeInsets.fromLTRB(padH, 41, padH, 0),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              // 머리: 제목(왼쪽) + 이용 원칙 요약(오른쪽 493)
               if (isDesktop)
                 Row(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Expanded(child: intro),
                     const SizedBox(width: 24),
+                    // 요약 상자 top 158 (= 152 + 6), left 867, 폭 493
                     const Padding(
                       padding: EdgeInsets.only(top: 6),
-                      child: SizedBox(width: 493, child: _Summary()),
+                      child: SizedBox(
+                        width: 493,
+                        child: PolicySummary(items: _summary),
+                      ),
                     ),
                   ],
                 )
               else ...[
                 intro,
                 const SizedBox(height: 24),
-                const _Summary(),
+                const PolicySummary(items: _summary),
+                const SizedBox(height: 30),
               ],
-              const SizedBox(height: 30),
-              const Divider(height: 1, thickness: 1, color: Color(0xFFDEE3E5)),
-              const SizedBox(height: 42),
-              // 운영 정책 확인 필요
-              Container(
-                padding: const EdgeInsets.fromLTRB(25, 22, 25, 22),
-                decoration: BoxDecoration(
-                  color: const Color(0xFFF9F5E9),
-                  borderRadius: BorderRadius.circular(12),
-                ),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text('운영 정책 확인 필요', style: _noto(20, weight: FontWeight.w700)),
-                    const SizedBox(height: 12),
-                    Text(
-                      '현재 화면은 UX 기능 설명입니다. 정식 이용약관·개인정보처리방침과 AI 공급자·보관 기간은 '
-                      '운영 주체 검토 후 별도로 확정·게시해야 합니다.',
-                      style: _noto(17, color: _muted),
-                    ),
-                  ],
-                ),
+              // 411 구분선 → 454 안내 상자
+              const Divider(
+                height: 1,
+                thickness: 1,
+                color: PolicyStyle.summaryRule,
               ),
+              const SizedBox(height: 42),
+              const PolicyNotice(
+                title: '운영 정책 확인 필요',
+                body:
+                    '현재 화면은 UX 기능 설명입니다. 정식 이용약관·개인정보처리방침과 AI 공급자·보관 기간은 '
+                    '운영 주체 검토 후 별도로 확정·게시해야 합니다.',
+              ),
+              // 573 → 645 섹션 제목 → 721 카드
               const SizedBox(height: 72),
-              Text('01  서비스 이용 기준', style: sectionTitle),
-              const SizedBox(height: 21),
-              _CardGrid(
+              PolicySlot(
+                height: isMobile ? 0 : 76,
+                child: Text('01  서비스 이용 기준', style: sectionTitle),
+              ),
+              if (isMobile) const SizedBox(height: 20),
+              ResponsiveGrid(
                 columns: isMobile ? 1 : 2,
+                gap: 36,
+                runGap: 31,
                 children: [
                   for (final c in _policyCards)
-                    _PolicyCard(title: c.$1, body: c.$2),
+                    PolicyCard(title: c.$1, body: c.$2),
                 ],
               ),
+              // 1138 → 1245 섹션 제목 → 1329 표
               const SizedBox(height: 107),
-              Text('02  외부 AI 처리 및 사진 주의사항', style: sectionTitle),
-              const SizedBox(height: 21),
-              Container(
-                padding: const EdgeInsets.fromLTRB(26, 27, 30, 42),
-                decoration: BoxDecoration(
-                  color: _cardBg,
-                  borderRadius: BorderRadius.circular(14),
-                ),
-                child: Column(
-                  children: [
-                    for (var i = 0; i < _dataRows.length; i++) ...[
-                      if (i > 0)
-                        const Padding(
-                          padding: EdgeInsets.fromLTRB(0, 6, 0, 10),
-                          child: Divider(height: 1, thickness: 1, color: _rule),
-                        ),
-                      _DataRow(
-                        label: _dataRows[i].$1,
-                        value: _dataRows[i].$2,
-                        stacked: isMobile,
-                      ),
-                    ],
-                  ],
-                ),
+              PolicySlot(
+                height: isMobile ? 0 : 84,
+                child: Text('02  외부 AI 처리 및 사진 주의사항', style: sectionTitle),
               ),
+              if (isMobile) const SizedBox(height: 20),
+              PolicyDataTable(rows: _dataRows, stacked: isMobile),
+              // 1603 → 1667 안내 → 1735 버튼
               const SizedBox(height: 64),
-              Text(
-                '기능 이용방법과 샘플 결과를 확인한 다음 소재 사진을 등록해 보세요.',
-                style: _noto(isMobile ? 16 : 19, color: _muted),
+              PolicySlot(
+                height: isMobile ? 0 : 68,
+                child: Text(
+                  '기능 이용방법과 샘플 결과를 확인한 다음 소재 사진을 등록해 보세요.',
+                  style: PolicyStyle.noto(
+                    isMobile ? 16 : 19,
+                    color: PolicyStyle.muted,
+                  ),
+                ),
               ),
-              const SizedBox(height: 15),
+              if (isMobile) const SizedBox(height: 15),
               Wrap(
                 spacing: 21,
                 runSpacing: 12,
                 children: [
-                  _PolicyCta(
+                  PolicyCta(
                     label: '이용방법 보기',
                     width: 238,
                     onTap: () => AppHeader.goTo(context, AppRoutes.guide),
                   ),
-                  _PolicyCta(
+                  PolicyCta(
                     label: '내 소재 등록하기',
                     width: 267,
                     onTap: () => AppHeader.goTo(context, AppRoutes.register),
@@ -198,193 +192,6 @@ class DataPolicyPage extends StatelessWidget {
                 ],
               ),
             ],
-          ),
-        ),
-      ),
-    );
-  }
-}
-
-/// 이용 원칙 요약 — #F5F6F7, radius 14, 번호는 보라 #633DC7
-class _Summary extends StatelessWidget {
-  const _Summary();
-
-  static const _items = ['샘플·분석·PDF는 로그인 없이', '외부 AI 분석 시작 전 동의', 'AI 이미지는 안전성 검증이 아님'];
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.fromLTRB(32, 24, 42, 24),
-      decoration: BoxDecoration(
-        color: const Color(0xFFF5F6F7),
-        borderRadius: BorderRadius.circular(14),
-      ),
-      child: Column(
-        children: [
-          for (var i = 0; i < _items.length; i++) ...[
-            if (i > 0)
-              const Padding(
-                padding: EdgeInsets.symmetric(vertical: 10),
-                child: Divider(
-                  height: 1,
-                  thickness: 1,
-                  color: Color(0xFFDEE3E5),
-                ),
-              ),
-            ConstrainedBox(
-              constraints: const BoxConstraints(minHeight: 34),
-              child: Row(
-                children: [
-                  SizedBox(
-                    width: 54,
-                    child: Text(
-                      '0${i + 1}',
-                      style: DataPolicyPage._noto(
-                        18,
-                        weight: FontWeight.w700,
-                        color: DataPolicyPage._purple,
-                      ),
-                    ),
-                  ),
-                  Expanded(
-                    child: Text(
-                      _items[i],
-                      style: DataPolicyPage._noto(
-                        17,
-                        weight: FontWeight.w500,
-                        color: DataPolicyPage._ink,
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ],
-        ],
-      ),
-    );
-  }
-}
-
-class _CardGrid extends StatelessWidget {
-  const _CardGrid({required this.columns, required this.children});
-
-  final int columns;
-  final List<Widget> children;
-
-  @override
-  Widget build(BuildContext context) {
-    return ResponsiveGrid(
-      columns: columns,
-      gap: 36,
-      runGap: 31,
-      children: children,
-    );
-  }
-}
-
-/// 정책 카드 — 622 x 193, #F4F6F7, radius 12
-class _PolicyCard extends StatelessWidget {
-  const _PolicyCard({required this.title, required this.body});
-
-  final String title;
-  final String body;
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      constraints: const BoxConstraints(minHeight: 193),
-      padding: const EdgeInsets.fromLTRB(24, 22, 33, 22),
-      decoration: BoxDecoration(
-        color: DataPolicyPage._cardBg,
-        borderRadius: BorderRadius.circular(12),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(title, style: DataPolicyPage._noto(22, weight: FontWeight.w700)),
-          const SizedBox(height: 33),
-          Text(
-            body,
-            style: DataPolicyPage._noto(17, color: DataPolicyPage._muted),
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-class _DataRow extends StatelessWidget {
-  const _DataRow({
-    required this.label,
-    required this.value,
-    required this.stacked,
-  });
-
-  final String label;
-  final String value;
-  final bool stacked;
-
-  @override
-  Widget build(BuildContext context) {
-    final l = Text(label, style: DataPolicyPage._noto(17, weight: FontWeight.w700));
-    final v = Text(
-      value,
-      style: DataPolicyPage._noto(17, color: DataPolicyPage._muted),
-    );
-    if (stacked) {
-      return Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [l, const SizedBox(height: 4), v],
-      );
-    }
-    return ConstrainedBox(
-      constraints: const BoxConstraints(minHeight: 39),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          SizedBox(width: 236, child: l),
-          Expanded(child: v),
-        ],
-      ),
-    );
-  }
-}
-
-/// 검정 CTA — 높이 58, radius 9, 글자 17 Bold 왼쪽 21
-class _PolicyCta extends StatelessWidget {
-  const _PolicyCta({required this.label, required this.width, this.onTap});
-
-  final String label;
-  final double width;
-  final VoidCallback? onTap;
-
-  @override
-  Widget build(BuildContext context) {
-    return Semantics(
-      button: true,
-      enabled: onTap != null,
-      child: MouseRegion(
-        cursor: onTap != null ? SystemMouseCursors.click : MouseCursor.defer,
-        child: GestureDetector(
-          onTap: onTap,
-          child: Container(
-            width: width,
-            height: 58,
-            padding: const EdgeInsets.only(left: 21),
-            alignment: Alignment.centerLeft,
-            decoration: BoxDecoration(
-              color: AppColors.gray900,
-              borderRadius: BorderRadius.circular(9),
-            ),
-            child: Text(
-              label,
-              style: DataPolicyPage._noto(
-                17,
-                weight: FontWeight.w700,
-                color: Colors.white,
-              ),
-            ),
           ),
         ),
       ),

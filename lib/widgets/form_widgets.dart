@@ -1,13 +1,18 @@
 import 'package:flutter/material.dart';
 
 import '../theme/app_colors.dart';
+import '../theme/app_icons.dart';
 import '../theme/app_text_styles.dart';
 
 const kErrorColor = Color(0xFFE00052);
 
-/// Figma `input` — 라벨 13 / 간격 10 / 입력칸 높이 45, radius 2
+/// Figma `input` 테두리 (507:3287)
+const kInputBorderColor = Color(0xFFD9DCE1);
+
+/// Figma `input` 컴포넌트(506:3233 · 507:3287) — 라벨 13 / 간격 10 / 입력칸 높이 45, radius 4
 ///
-/// 테두리: 기본 gray/100, 입력 중 gray/900, 오류 error(#E00052, 글자도 같은 색)
+/// 글자·힌트 15 Regular(자간 -2%). 테두리: 기본 #D9DCE1, 입력 중 gray/900,
+/// 오류 error(#E00052, 글자도 같은 색)
 class LabeledInput extends StatelessWidget {
   const LabeledInput({
     super.key,
@@ -35,14 +40,17 @@ class LabeledInput extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     OutlineInputBorder border(Color c) => OutlineInputBorder(
-      borderRadius: BorderRadius.circular(2),
+      borderRadius: BorderRadius.circular(4),
       borderSide: BorderSide(color: c),
     );
     final textColor = error ? kErrorColor : AppColors.gray900;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        Text(label, style: AppTextStyles.body13.copyWith(color: AppColors.gray900)),
+        Text(
+          label,
+          style: AppTextStyles.body13.copyWith(color: AppColors.gray900),
+        ),
         const SizedBox(height: 10),
         SizedBox(
           height: 45,
@@ -58,7 +66,8 @@ class LabeledInput extends StatelessWidget {
             cursorWidth: 1,
             style: TextStyle(
               fontFamily: AppFonts.pretendard,
-              fontSize: 14,
+              fontSize: 15,
+              letterSpacing: -0.3,
               color: textColor,
             ),
             decoration: InputDecoration(
@@ -66,18 +75,19 @@ class LabeledInput extends StatelessWidget {
               hintText: hint,
               hintStyle: const TextStyle(
                 fontFamily: AppFonts.pretendard,
-                fontSize: 14,
+                fontSize: 15,
+                letterSpacing: -0.3,
                 color: AppColors.gray400,
               ),
               contentPadding: const EdgeInsets.symmetric(
                 horizontal: 10,
-                vertical: 13,
+                vertical: 12,
               ),
               filled: true,
               fillColor: AppColors.screen,
-              enabledBorder: border(error ? kErrorColor : AppColors.gray100),
+              enabledBorder: border(error ? kErrorColor : kInputBorderColor),
               focusedBorder: border(error ? kErrorColor : AppColors.gray900),
-              border: border(AppColors.gray100),
+              border: border(kInputBorderColor),
             ),
           ),
         ),
@@ -98,7 +108,9 @@ class KakaoButton extends StatelessWidget {
       button: true,
       enabled: onPressed != null,
       child: MouseRegion(
-        cursor: onPressed != null ? SystemMouseCursors.click : MouseCursor.defer,
+        cursor: onPressed != null
+            ? SystemMouseCursors.click
+            : MouseCursor.defer,
         child: GestureDetector(
           onTap: onPressed,
           child: Container(
@@ -134,7 +146,11 @@ class FillButton extends StatelessWidget {
     this.onPressed,
     this.muted = false,
     this.dimWhenDisabled = true,
+    this.height = 50,
   });
+
+  /// 회원가입 창의 '가입하고 시작하기'는 57 (Figma 1100:8495)
+  final double height;
 
   final String label;
   final VoidCallback? onPressed;
@@ -149,7 +165,7 @@ class FillButton extends StatelessWidget {
   Widget build(BuildContext context) {
     final enabled = onPressed != null;
     final child = Container(
-      height: 50,
+      height: height,
       alignment: Alignment.center,
       padding: const EdgeInsets.symmetric(horizontal: 20),
       decoration: BoxDecoration(
@@ -240,20 +256,8 @@ class BackBox extends StatelessWidget {
         cursor: SystemMouseCursors.click,
         child: GestureDetector(
           onTap: onTap ?? () => Navigator.of(context).maybePop(),
-          child: Container(
-            width: 42,
-            height: 42,
-            decoration: BoxDecoration(
-              color: AppColors.screen,
-              border: Border.all(color: AppColors.gray600),
-              borderRadius: BorderRadius.circular(2),
-            ),
-            child: const Icon(
-              Icons.keyboard_backspace,
-              size: 26,
-              color: AppColors.gray900,
-            ),
-          ),
+          // Figma back 컴포넌트(775:3858) 그대로: 흰 바탕, 0.5px gray/900 테두리, 꺾인 화살표
+          child: Image.asset(AppIcons.back, width: 42, height: 42),
         ),
       ),
     );

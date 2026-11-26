@@ -40,6 +40,7 @@ dependencies:
   url_launcher: ^6.3.3
   # 웹 파일 선택(내 소재 사진 등록) — url_launcher_web이 이미 쓰는 패키지
   web: ^1.1.1
+  pdf: ^3.13.1
 
 dev_dependencies:
   flutter_test:
@@ -66,6 +67,10 @@ flutter:
   assets:
     - assets/images/
     - assets/images/home/
+    # Figma 아이콘(SVG)을 3배 PNG로 변환 — flutter_svg 없이 사용
+    - assets/images/icons/
+    # PDF 전용 한글 폰트(전체 음절) — PDF를 만들 때만 불러온다. tool/pdf_fonts.sh
+    - assets/pdf_fonts/
 
   # 폰트는 lib/ 에 쓰인 글자만 남긴 서브셋입니다.
   # 새 문구를 추가하면 tool/subset_fonts.sh 로 다시 만들어 주세요.

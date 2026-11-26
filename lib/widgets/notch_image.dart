@@ -15,7 +15,12 @@ class NotchImage extends StatelessWidget {
     this.shade,
     this.alignment = Alignment.center,
     this.tagFontFamily,
+    this.fillAspectRatio,
   });
+
+  /// 있으면 사진을 이 비율(폭 기준) 상자에 늘려 채우고(BoxFit.fill) 위쪽부터 보여 준다.
+  /// Figma가 이미지를 원본 비율과 다르게 늘려 놓은 곳(A4 자원·자원랩 카드 640x428)용.
+  final double? fillAspectRatio;
 
   final String image;
   final String tag;
@@ -50,7 +55,17 @@ class NotchImage extends StatelessWidget {
         child: Stack(
           fit: StackFit.expand,
           children: [
-            Image.asset(image, fit: BoxFit.cover, alignment: alignment),
+            if (fillAspectRatio case final ratio?)
+              OverflowBox(
+                alignment: Alignment.topCenter,
+                maxHeight: double.infinity,
+                child: AspectRatio(
+                  aspectRatio: ratio,
+                  child: Image.asset(image, fit: BoxFit.fill),
+                ),
+              )
+            else
+              Image.asset(image, fit: BoxFit.cover, alignment: alignment),
             if (shade != null)
               DecoratedBox(decoration: BoxDecoration(gradient: shade)),
             Positioned(

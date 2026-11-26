@@ -72,9 +72,8 @@ class SampleResultPage extends StatelessWidget {
               ),
               ListenableBuilder(
                 listenable: AuthState.instance,
-                builder: (context, _) => _SampleBanners(
-                  showLogin: !AuthState.instance.isSignedIn,
-                ),
+                builder: (context, _) =>
+                    _SampleBanners(showLogin: !AuthState.instance.isSignedIn),
               ),
             ],
           ),
@@ -101,7 +100,10 @@ class _SampleRow extends StatelessWidget {
       height: 30,
       alignment: Alignment.center,
       decoration: BoxDecoration(border: Border.all(color: AppColors.gray900)),
-      child: Text('${index + 1}', style: AppTextStyles.title18.copyWith(color: AppColors.gray900)),
+      child: Text(
+        '${index + 1}',
+        style: AppTextStyles.title18.copyWith(color: AppColors.gray900),
+      ),
     );
 
     final cover = MouseRegion(
@@ -123,7 +125,9 @@ class _SampleRow extends StatelessWidget {
                   style: AppTextStyles.title24.copyWith(
                     color: AppColors.screen,
                     fontSize: 22,
-                    shadows: const [Shadow(color: Color(0x66000000), blurRadius: 6)],
+                    shadows: const [
+                      Shadow(color: Color(0x66000000), blurRadius: 6),
+                    ],
                   ),
                 ),
               ),
@@ -177,7 +181,13 @@ class _SampleRow extends StatelessWidget {
           child: Row(
             mainAxisSize: MainAxisSize.min,
             children: [
-              Text('자세히 보기', style: AppTextStyles.title16.copyWith(color: Colors.white, letterSpacing: 0)),
+              Text(
+                '자세히 보기',
+                style: AppTextStyles.title16.copyWith(
+                  color: Colors.white,
+                  letterSpacing: 0,
+                ),
+              ),
               const SizedBox(width: 8),
               const Icon(Icons.chevron_right, color: Colors.white, size: 20),
             ],
@@ -244,7 +254,10 @@ class _SampleBanners extends StatelessWidget {
       eyebrow: 'Login',
       title: '내 소재로 놀이 장면을 보고싶다면',
       body: '직접 사진을 등록하고 자원도감이 검토해 \n3가지 놀이 장면을 확인할 수 있어요',
-      action: AppButton(label: '로그인 하러가기', onPressed: () => showLoginDialog(context)),
+      action: AppButton(
+        label: '로그인 하러가기',
+        onPressed: () => showLoginDialog(context),
+      ),
     );
     if (Responsive.of(context) != ScreenSize.desktop) {
       return Column(

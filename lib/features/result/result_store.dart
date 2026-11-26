@@ -24,7 +24,11 @@ class ResultStore extends ChangeNotifier {
       _results.values.where((r) => r.saved).toList()
         ..sort((a, b) => b.createdAt.compareTo(a.createdAt));
 
-  void save(MaterialResult result) {
+  /// 결과를 저장한다. 끝난 뒤에만 [MaterialResult.saved]가 true가 된다.
+  ///
+  /// 저장 API로 바꾸면 서버 응답이 성공일 때만 아래를 실행하고, 실패하면 예외를 던진다.
+  /// (화면은 예외를 받아 '저장하지 못했어요'를 보여 주고 '저장 완료'로 바꾸지 않는다)
+  Future<void> save(MaterialResult result) async {
     result.saved = true;
     _results[result.id] = result;
     notifyListeners();

@@ -199,9 +199,7 @@ class _RegisterPageState extends State<RegisterPage> {
       analysis: _analysis,
     );
     store.put(result);
-    Navigator.of(
-      context,
-    ).pushReplacementNamed(AppRoutes.resultPath(result.id));
+    Navigator.of(context).pushReplacementNamed(AppRoutes.resultPath(result.id));
   }
 
   void _scrollTo(PlayMode mode) {
@@ -276,45 +274,51 @@ class _RegisterPageState extends State<RegisterPage> {
       ),
     };
 
-    final (String title, String? sub, Color? subColor, Widget? trailing) =
-        switch (_step) {
-          _Step.photo => (
-            '소재 사진을 등록해 주세요',
-            '소재 전체와 표면이 잘 보이는 사진을 올려 주세요. 최대 5장까지 등록할 수 있습니다.',
-            null,
-            null,
-          ),
-          _Step.info => (
-            '알고 있는 정보를 입력해 주세요',
-            '입력할수록 분석이 정확해져요! 헷갈리는 항목은 비워 두셔도 됩니다.',
-            null,
-            null,
-          ),
-          _Step.review => (
-            '분석 결과를 검토해 주세요',
-            'AI 추정 정보는 틀릴 수 있어요. 실제와 다르면 수정한 뒤 다음으로 넘어가 주세요.',
-            null,
-            null,
-          ),
-          _Step.generate => _allReady
-              ? (
-                  '3가지 놀이 장면을 보여드릴게요',
-                  '생성완료! 탐색·변형·조합 장면을 차례로 생성되었습니다.',
-                  null,
-                  _Progress(value: 1),
-                )
-              : (
-                  '놀이 장면을 만들고 있어요',
-                  _failed.isNotEmpty
-                      ? '${_failed.map((m) => m.label).join('·')} 장면을 생성하지 못했어요'
-                      : '탐색·변형·조합 장면을 차례로 생성합니다. 이 화면을 벗어나면 진행이 중단됩니다.',
-                  _failed.isNotEmpty ? kErrorColor : null,
-                  _Progress(
-                    value: (_scenes.length + _failed.length) /
-                        PlayMode.values.length,
-                  ),
+    final (
+      String title,
+      String? sub,
+      Color? subColor,
+      Widget? trailing,
+    ) = switch (_step) {
+      _Step.photo => (
+        '소재 사진을 등록해 주세요',
+        '소재 전체와 표면이 잘 보이는 사진을 올려 주세요. 최대 5장까지 등록할 수 있습니다.',
+        null,
+        null,
+      ),
+      _Step.info => (
+        '알고 있는 정보를 입력해 주세요',
+        '입력할수록 분석이 정확해져요! 헷갈리는 항목은 비워 두셔도 됩니다.',
+        null,
+        null,
+      ),
+      _Step.review => (
+        '분석 결과를 검토해 주세요',
+        'AI 추정 정보는 틀릴 수 있어요. 실제와 다르면 수정한 뒤 다음으로 넘어가 주세요.',
+        null,
+        null,
+      ),
+      _Step.generate =>
+        _allReady
+            ? (
+                '3가지 놀이 장면을 보여드릴게요',
+                '생성완료! 탐색·변형·조합 장면을 차례로 생성되었습니다.',
+                null,
+                _Progress(value: 1),
+              )
+            : (
+                '놀이 장면을 만들고 있어요',
+                _failed.isNotEmpty
+                    ? '${_failed.map((m) => m.label).join('·')} 장면을 생성하지 못했어요'
+                    : '탐색·변형·조합 장면을 차례로 생성합니다. 이 화면을 벗어나면 진행이 중단됩니다.',
+                _failed.isNotEmpty ? kErrorColor : null,
+                _Progress(
+                  value:
+                      (_scenes.length + _failed.length) /
+                      PlayMode.values.length,
                 ),
-        };
+              ),
+    };
 
     return PopScope(
       canPop: false,
@@ -347,7 +351,8 @@ class _RegisterPageState extends State<RegisterPage> {
                       const SizedBox(height: 40),
                       Padding(
                         padding: EdgeInsets.symmetric(horizontal: padH),
-                        child: trailing == null ||
+                        child:
+                            trailing == null ||
                                 Responsive.of(context) == ScreenSize.mobile
                             ? Column(
                                 crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -448,7 +453,9 @@ class _PhotoStep extends StatelessWidget {
       child: GestureDetector(
         onTap: full ? null : onPick,
         child: CustomPaint(
-          painter: _DashedBorder(color: error ? kErrorColor : AppColors.gray200),
+          painter: _DashedBorder(
+            color: error ? kErrorColor : AppColors.gray200,
+          ),
           child: Container(
             height: 407,
             color: error ? const Color(0xFFFDF2F6) : null,
@@ -472,7 +479,9 @@ class _PhotoStep extends StatelessWidget {
                 Text(
                   '파일을 선택하거나 여기다 끌어다 놓으세요.',
                   textAlign: TextAlign.center,
-                  style: AppTextStyles.title18.copyWith(color: AppColors.gray900),
+                  style: AppTextStyles.title18.copyWith(
+                    color: AppColors.gray900,
+                  ),
                 ),
                 const SizedBox(height: 20),
                 Text(
@@ -656,7 +665,10 @@ class _Thumb extends StatelessWidget {
               right: 11,
               bottom: 10,
               child: Container(
-                padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 10,
+                  vertical: 5,
+                ),
                 decoration: BoxDecoration(
                   color: Colors.black,
                   borderRadius: BorderRadius.circular(100),
@@ -692,10 +704,7 @@ class _DashedBorder extends CustomPainter {
       ..strokeWidth = 1;
     final path = Path()
       ..addRRect(
-        RRect.fromRectAndRadius(
-          Offset.zero & size,
-          const Radius.circular(2),
-        ),
+        RRect.fromRectAndRadius(Offset.zero & size, const Radius.circular(2)),
       );
     for (final metric in path.computeMetrics()) {
       var distance = 0.0;
@@ -861,7 +870,10 @@ class _FormCard extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          Text(title, style: AppTextStyles.title18.copyWith(color: AppColors.gray900)),
+          Text(
+            title,
+            style: AppTextStyles.title18.copyWith(color: AppColors.gray900),
+          ),
           for (final c in children) ...[const SizedBox(height: 30), c],
         ],
       ),
@@ -898,7 +910,10 @@ class _DraftInput extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        Text(label, style: AppTextStyles.body13.copyWith(color: AppColors.gray900)),
+        Text(
+          label,
+          style: AppTextStyles.body13.copyWith(color: AppColors.gray900),
+        ),
         const SizedBox(height: 10),
         SizedBox(
           height: 45,
@@ -946,7 +961,10 @@ class _ChipGroup extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(label, style: AppTextStyles.body13.copyWith(color: AppColors.gray900)),
+        Text(
+          label,
+          style: AppTextStyles.body13.copyWith(color: AppColors.gray900),
+        ),
         const SizedBox(height: 10),
         Wrap(
           spacing: 10,
@@ -967,13 +985,17 @@ class _ChipGroup extends StatelessWidget {
                         vertical: 10,
                       ),
                       decoration: BoxDecoration(
-                        color: o == value ? AppColors.gray900 : AppColors.gray50,
+                        color: o == value
+                            ? AppColors.gray900
+                            : AppColors.gray50,
                         borderRadius: BorderRadius.circular(100),
                       ),
                       child: Text(
                         o,
                         style: AppTextStyles.title16.copyWith(
-                          color: o == value ? AppColors.screen : AppColors.gray500,
+                          color: o == value
+                              ? AppColors.screen
+                              : AppColors.gray500,
                         ),
                       ),
                     ),
@@ -1026,9 +1048,18 @@ class _ReviewStep extends StatelessWidget {
             ),
           ),
           const SizedBox(height: 10),
-          Text(name, style: AppTextStyles.title16.copyWith(color: AppColors.gray900, letterSpacing: -0.32)),
+          Text(
+            name,
+            style: AppTextStyles.title16.copyWith(
+              color: AppColors.gray900,
+              letterSpacing: -0.32,
+            ),
+          ),
           const SizedBox(height: 6),
-          Text(meta, style: AppTextStyles.body13.copyWith(color: AppColors.gray600)),
+          Text(
+            meta,
+            style: AppTextStyles.body13.copyWith(color: AppColors.gray600),
+          ),
         ],
       ),
     );
@@ -1060,7 +1091,11 @@ class _ReviewStep extends StatelessWidget {
           rows: analysis.unknown,
           actionLabel: '입력',
           onAction: (row) async {
-            final changed = await showEditInfoDialog(context, row: row, input: true);
+            final changed = await showEditInfoDialog(
+              context,
+              row: row,
+              input: true,
+            );
             if (changed == true) onChanged();
           },
         ),
@@ -1159,7 +1194,9 @@ class _InfoTable extends StatelessWidget {
           ),
           for (final row in rows)
             Container(
-              constraints: BoxConstraints(minHeight: onAction != null ? 34 : 29),
+              constraints: BoxConstraints(
+                minHeight: onAction != null ? 34 : 29,
+              ),
               padding: const EdgeInsets.symmetric(horizontal: 14),
               decoration: const BoxDecoration(border: Border(top: line)),
               child: Row(

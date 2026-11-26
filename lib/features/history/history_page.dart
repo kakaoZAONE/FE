@@ -91,7 +91,9 @@ class _HistoryPageState extends State<HistoryPage> {
                 children: [
                   SizedBox(
                     width: isMobile ? double.infinity : 330,
-                    child: _SearchBox(onChanged: (v) => setState(() => _query = v.trim())),
+                    child: _SearchBox(
+                      onChanged: (v) => setState(() => _query = v.trim()),
+                    ),
                   ),
                   newButton,
                 ],
@@ -112,7 +114,10 @@ class _HistoryPageState extends State<HistoryPage> {
                   ] else
                     Row(
                       crossAxisAlignment: CrossAxisAlignment.end,
-                      children: [Expanded(child: heading), actions],
+                      children: [
+                        Expanded(child: heading),
+                        actions,
+                      ],
                     ),
                   const SizedBox(height: 26),
                   if (all.isEmpty)
@@ -122,7 +127,9 @@ class _HistoryPageState extends State<HistoryPage> {
                       columns: columns,
                       gap: 23,
                       runGap: 23,
-                      children: [for (final r in items) _MaterialCard(result: r)],
+                      children: [
+                        for (final r in items) _MaterialCard(result: r),
+                      ],
                     ),
                 ],
               ),
@@ -154,7 +161,11 @@ class _SearchBox extends StatelessWidget {
         cursorColor: AppColors.gray900,
         decoration: InputDecoration(
           isDense: true,
-          prefixIcon: const Icon(Icons.search, size: 16, color: AppColors.gray600),
+          prefixIcon: const Icon(
+            Icons.search,
+            size: 16,
+            color: AppColors.gray600,
+          ),
           prefixIconConstraints: const BoxConstraints(minWidth: 36),
           hintText: '소재명으로 검색',
           hintStyle: AppTextStyles.body13.copyWith(color: AppColors.gray500),
@@ -192,7 +203,10 @@ class IconFillButton extends StatelessWidget {
             children: [
               const Icon(Icons.add, size: 22, color: Colors.white),
               const SizedBox(width: 10),
-              Text(label, style: AppTextStyles.title18.copyWith(color: Colors.white)),
+              Text(
+                label,
+                style: AppTextStyles.title18.copyWith(color: Colors.white),
+              ),
             ],
           ),
         ),
@@ -246,11 +260,15 @@ class _MaterialCard extends StatelessWidget {
     return MouseRegion(
       cursor: SystemMouseCursors.click,
       child: GestureDetector(
-        onTap: () => Navigator.of(context).pushNamed(AppRoutes.historyPath(result.id)),
+        onTap: () =>
+            Navigator.of(context).pushNamed(AppRoutes.historyPath(result.id)),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            AspectRatio(aspectRatio: 384 / 282, child: _Cover(result: result)),
+            AspectRatio(
+              aspectRatio: 384 / 282,
+              child: _Cover(result: result),
+            ),
             Container(
               height: 103,
               color: AppColors.gray50,
@@ -319,7 +337,11 @@ class _NeedLogin extends StatelessWidget {
         padding: const EdgeInsets.fromLTRB(20, 120, 20, 0),
         child: Column(
           children: [
-            Text('내 탐색 기록은 로그인 후 볼 수 있어요', style: AppTextStyles.title24, textAlign: TextAlign.center),
+            Text(
+              '내 탐색 기록은 로그인 후 볼 수 있어요',
+              style: AppTextStyles.title24,
+              textAlign: TextAlign.center,
+            ),
             const SizedBox(height: 24),
             AppButton(label: '로그인', onPressed: () => showLoginDialog(context)),
           ],
@@ -362,7 +384,11 @@ class _DetailBody extends StatelessWidget {
   final MaterialResult result;
   final List<MaterialResult> runs;
 
-  Future<void> _delete(BuildContext context, MaterialResult run, int number) async {
+  Future<void> _delete(
+    BuildContext context,
+    MaterialResult run,
+    int number,
+  ) async {
     final navigator = Navigator.of(context);
     final ok = await showDialog<bool>(
       context: context,
@@ -379,24 +405,47 @@ class _DetailBody extends StatelessWidget {
               mainAxisSize: MainAxisSize.min,
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
-                Text('기록을 삭제할까요?', style: AppTextStyles.title16.copyWith(color: AppColors.gray900, letterSpacing: -0.32)),
+                Text(
+                  '기록을 삭제할까요?',
+                  style: AppTextStyles.title16.copyWith(
+                    color: AppColors.gray900,
+                    letterSpacing: -0.32,
+                  ),
+                ),
                 const SizedBox(height: 6),
                 Text(
                   '선택한 기록만 삭제됩니다. 삭제 후에는 복구할 수 없어요.',
-                  style: AppTextStyles.body13.copyWith(fontSize: 11, color: kErrorColor),
+                  style: AppTextStyles.body13.copyWith(
+                    fontSize: 11,
+                    color: kErrorColor,
+                  ),
                 ),
                 const SizedBox(height: 16),
-                Text('삭제할 탐색 기록', style: AppTextStyles.body13.copyWith(fontSize: 11, fontWeight: FontWeight.w600, color: AppColors.gray900)),
+                Text(
+                  '삭제할 탐색 기록',
+                  style: AppTextStyles.body13.copyWith(
+                    fontSize: 11,
+                    fontWeight: FontWeight.w600,
+                    color: AppColors.gray900,
+                  ),
+                ),
                 const SizedBox(height: 8),
                 Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 10,
+                    vertical: 8,
+                  ),
                   decoration: BoxDecoration(
                     color: AppColors.gray100,
                     borderRadius: BorderRadius.circular(6),
                   ),
                   child: Text(
                     '${run.name} · 탐색 $number _ 놀이 장면 ${run.scenes.length}개와 소재 정보',
-                    style: AppTextStyles.body13.copyWith(fontSize: 11, color: AppColors.gray900, fontWeight: FontWeight.w600),
+                    style: AppTextStyles.body13.copyWith(
+                      fontSize: 11,
+                      color: AppColors.gray900,
+                      fontWeight: FontWeight.w600,
+                    ),
                   ),
                 ),
                 const SizedBox(height: 30),
@@ -435,7 +484,12 @@ class _DetailBody extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final pad = Responsive.value<double>(context, desktop: 120, tablet: 40, mobile: 20);
+    final pad = Responsive.value<double>(
+      context,
+      desktop: 120,
+      tablet: 40,
+      mobile: 20,
+    );
     final isDesktop = Responsive.of(context) == ScreenSize.desktop;
     String two(int v) => v.toString().padLeft(2, '0');
     String date(DateTime d) => '${d.year}.${two(d.month)}.${two(d.day)}';
@@ -477,9 +531,18 @@ class _DetailBody extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(result.name, style: AppTextStyles.sectionTitle.copyWith(fontSize: 36, fontWeight: FontWeight.w600)),
+              Text(
+                result.name,
+                style: AppTextStyles.sectionTitle.copyWith(
+                  fontSize: 36,
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
               const SizedBox(height: 4),
-              Text(result.source, style: AppTextStyles.sectionSub.copyWith(fontSize: 17)),
+              Text(
+                result.source,
+                style: AppTextStyles.sectionSub.copyWith(fontSize: 17),
+              ),
               const SizedBox(height: 16),
               facts,
               const SizedBox(height: 14),
@@ -497,7 +560,8 @@ class _DetailBody extends StatelessWidget {
                   ),
                   FillButton(
                     label: '이 소재로 새 탐색',
-                    onPressed: () => AppHeader.goTo(context, AppRoutes.register),
+                    onPressed: () =>
+                        AppHeader.goTo(context, AppRoutes.register),
                   ),
                 ],
               ),
@@ -514,8 +578,16 @@ class _DetailBody extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             Padding(
-              padding: EdgeInsets.fromLTRB(Responsive.pagePadding(context), 15, Responsive.pagePadding(context), 0),
-              child: const Align(alignment: Alignment.centerLeft, child: BackBox()),
+              padding: EdgeInsets.fromLTRB(
+                Responsive.pagePadding(context),
+                15,
+                Responsive.pagePadding(context),
+                0,
+              ),
+              child: const Align(
+                alignment: Alignment.centerLeft,
+                child: BackBox(),
+              ),
             ),
             Padding(
               padding: EdgeInsets.fromLTRB(pad, 40, pad, 0),
@@ -524,16 +596,29 @@ class _DetailBody extends StatelessWidget {
                 children: [
                   head,
                   const SizedBox(height: 28),
-                  const Divider(height: 1, thickness: 1, color: AppColors.gray500),
+                  const Divider(
+                    height: 1,
+                    thickness: 1,
+                    color: AppColors.gray500,
+                  ),
                   const SizedBox(height: 20),
                   Row(
                     children: [
-                      Text('탐색 기록 ${runs.length}건', style: AppTextStyles.title16.copyWith(color: AppColors.gray900, letterSpacing: -0.32)),
+                      Text(
+                        '탐색 기록 ${runs.length}건',
+                        style: AppTextStyles.title16.copyWith(
+                          color: AppColors.gray900,
+                          letterSpacing: -0.32,
+                        ),
+                      ),
                       const Spacer(),
                       if (isDesktop)
                         Text(
                           '각 탐색은 생성 당시의 소재 정보로 보관되며, 소재 정보를 수정해도 이전 결과는 바뀌지 않습니다.',
-                          style: AppTextStyles.body13.copyWith(fontSize: 11, color: AppColors.gray500),
+                          style: AppTextStyles.body13.copyWith(
+                            fontSize: 11,
+                            color: AppColors.gray500,
+                          ),
                         ),
                     ],
                   ),
@@ -543,8 +628,11 @@ class _DetailBody extends StatelessWidget {
                     _RunCard(
                       run: runs[i],
                       number: runs.length - i,
-                      onOpen: () => Navigator.of(context).pushNamed(AppRoutes.resultPath(runs[i].id)),
-                      onDelete: () => _delete(context, runs[i], runs.length - i),
+                      onOpen: () => Navigator.of(
+                        context,
+                      ).pushNamed(AppRoutes.resultPath(runs[i].id)),
+                      onDelete: () =>
+                          _delete(context, runs[i], runs.length - i),
                     ),
                   ],
                 ],
@@ -568,9 +656,18 @@ class _Fact extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(label, style: AppTextStyles.body13.copyWith(color: AppColors.gray400)),
+        Text(
+          label,
+          style: AppTextStyles.body13.copyWith(color: AppColors.gray400),
+        ),
         const SizedBox(height: 4),
-        Text(value, style: AppTextStyles.body13.copyWith(fontWeight: FontWeight.w600, color: AppColors.gray900)),
+        Text(
+          value,
+          style: AppTextStyles.body13.copyWith(
+            fontWeight: FontWeight.w600,
+            color: AppColors.gray900,
+          ),
+        ),
       ],
     );
   }
@@ -606,13 +703,23 @@ class _RunCard extends StatelessWidget {
       children: [
         Row(
           children: [
-            Text('탐색 $number', style: AppTextStyles.title16.copyWith(color: AppColors.gray900, letterSpacing: -0.32)),
+            Text(
+              '탐색 $number',
+              style: AppTextStyles.title16.copyWith(
+                color: AppColors.gray900,
+                letterSpacing: -0.32,
+              ),
+            ),
             const SizedBox(width: 10),
             MouseRegion(
               cursor: SystemMouseCursors.click,
               child: GestureDetector(
                 onTap: onDelete,
-                child: const Icon(Icons.delete_outline, size: 18, color: kErrorColor),
+                child: const Icon(
+                  Icons.delete_outline,
+                  size: 18,
+                  color: kErrorColor,
+                ),
               ),
             ),
           ],
@@ -620,7 +727,10 @@ class _RunCard extends StatelessWidget {
         const SizedBox(height: 8),
         Text(
           '${d.year}.${two(d.month)}.${two(d.day)} ${two(d.hour)}:${two(d.minute)}',
-          style: AppTextStyles.body13.copyWith(fontSize: 11, color: AppColors.gray500),
+          style: AppTextStyles.body13.copyWith(
+            fontSize: 11,
+            color: AppColors.gray500,
+          ),
         ),
       ],
     );
@@ -654,7 +764,11 @@ class _RunCard extends StatelessWidget {
         ],
       ],
     );
-    final open = AppButton(label: '결과 보기', variant: AppButtonVariant.outline, onPressed: onOpen);
+    final open = AppButton(
+      label: '결과 보기',
+      variant: AppButtonVariant.outline,
+      onPressed: onOpen,
+    );
 
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 17, vertical: 14),
@@ -670,7 +784,13 @@ class _RunCard extends StatelessWidget {
             )
           : Column(
               crossAxisAlignment: CrossAxisAlignment.start,
-              children: [info, const SizedBox(height: 12), thumbs, const SizedBox(height: 12), open],
+              children: [
+                info,
+                const SizedBox(height: 12),
+                thumbs,
+                const SizedBox(height: 12),
+                open,
+              ],
             ),
     );
   }

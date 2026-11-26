@@ -29,7 +29,8 @@ class GuidePage extends StatelessWidget {
       '알고 있는 정보만 입력하기',
       '재질·형태·발생 공정 등 확인된 정보만 선택적으로 적어주세요.\n그 후 자유롭게 수정하며 재탐색할 수 있어요!',
     ),
-    ('04', 'AI 해석 확인하고 수정하기', '사진에서 파악한 외형 특징을 검토하고\n\n'),
+    // Figma 992:7111 본문은 1줄 + 빈 줄. 카드 높이(216)는 다른 카드와 같아서 본문 최소 2줄로 맞춤
+    ('04', 'AI 해석 확인하고 수정하기', '사진에서 파악한 외형 특징을 검토하고'),
     ('05', '놀이 제안 3가지 살펴보기', '내 소재의 탐색·변형·조합 장면을 \n자원도감을 통해 확인해보세요! '),
     ('06', '필요한 결과만 활용하기', 'PDF로 받거나 저장하고 \n자원랩에 바로 문의해보세요.'),
   ];
@@ -179,7 +180,10 @@ class _StepGrid extends StatelessWidget {
         ),
       );
     }
-    return Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: rows);
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: rows,
+    );
   }
 }
 
@@ -194,7 +198,11 @@ class _StepCard extends StatelessWidget {
       children: [
         NumberTag(step.$1),
         Text(step.$2, style: CardText.title24),
-        Text(step.$3, style: CardText.body15),
+        // 본문은 최소 2줄(줄 높이 20) — 모든 카드 높이 216
+        ConstrainedBox(
+          constraints: const BoxConstraints(minHeight: 40),
+          child: Text(step.$3, style: CardText.body15),
+        ),
       ],
     );
   }

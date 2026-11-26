@@ -40,7 +40,11 @@ class FlowHeader extends StatelessWidget {
                       height: 36,
                       child: Align(
                         alignment: Alignment.centerLeft,
-                        child: Image.asset(HomeAssets.logo, width: 91, height: 24),
+                        child: Image.asset(
+                          HomeAssets.logo,
+                          width: 91,
+                          height: 24,
+                        ),
                       ),
                     ),
                   ),
@@ -63,12 +67,22 @@ class FlowHeader extends StatelessWidget {
 /// 단계 표시: 지난·현재 단계는 Bold gray/900, 남은 단계는 Medium gray/400
 /// 단계 사이 > 아이콘 24, 간격 10
 class StepTrail extends StatelessWidget {
-  const StepTrail({super.key, required this.steps, required this.current});
+  const StepTrail({
+    super.key,
+    required this.steps,
+    required this.current,
+    this.boldPast = true,
+  });
 
   final List<String> steps;
 
   /// 0부터. 이 값 이하 단계가 진하게 표시된다.
   final int current;
+
+  /// false면 지난 단계도 흐리게(gray/400 Medium) — C1 결과 화면 `flow`(787:14559)
+  final bool boldPast;
+
+  bool _on(int i) => boldPast ? i <= current : i == current;
 
   @override
   Widget build(BuildContext context) {
@@ -90,10 +104,10 @@ class StepTrail extends StatelessWidget {
             steps[i],
             style: TextStyle(
               fontFamily: AppFonts.pretendard,
-              fontWeight: i <= current ? FontWeight.w700 : FontWeight.w500,
+              fontWeight: _on(i) ? FontWeight.w700 : FontWeight.w500,
               fontSize: size,
               height: AppTextStyles.pretendardNormal,
-              color: i <= current ? AppColors.gray900 : AppColors.gray400,
+              color: _on(i) ? AppColors.gray900 : AppColors.gray400,
             ),
           ),
         ],
@@ -330,9 +344,13 @@ class IconOutlineButton extends StatelessWidget {
     this.onPressed,
     this.gap = 8,
     this.compact = false,
+    this.iconAsset,
   });
 
   final IconData? icon;
+
+  /// Figma 아이콘 에셋([AppIcons]). 있으면 [icon] 대신 쓴다.
+  final String? iconAsset;
   final String label;
   final VoidCallback? onPressed;
   final double gap;
@@ -361,7 +379,14 @@ class IconOutlineButton extends StatelessWidget {
             child: Row(
               mainAxisSize: MainAxisSize.min,
               children: [
-                if (icon != null) ...[
+                if (iconAsset != null) ...[
+                  Image.asset(
+                    iconAsset!,
+                    width: compact ? 18 : 24,
+                    height: compact ? 18 : 24,
+                  ),
+                  SizedBox(width: compact ? 6 : gap),
+                ] else if (icon != null) ...[
                   Icon(icon, size: compact ? 18 : 24, color: AppColors.gray900),
                   SizedBox(width: compact ? 6 : gap),
                 ],
@@ -401,9 +426,16 @@ class FlowTopRow extends StatelessWidget {
       padding: EdgeInsets.fromLTRB(pad, 15, pad, 0),
       child: Row(
         children: [
-          if (onBack != null) BackBox(onTap: onBack) else const SizedBox(width: 42, height: 42),
-          SizedBox(width: Responsive.value<double>(context, desktop: 47, mobile: 16)),
-          Expanded(child: StepTrail(steps: steps, current: current)),
+          if (onBack != null)
+            BackBox(onTap: onBack)
+          else
+            const SizedBox(width: 42, height: 42),
+          SizedBox(
+            width: Responsive.value<double>(context, desktop: 47, mobile: 16),
+          ),
+          Expanded(
+            child: StepTrail(steps: steps, current: current),
+          ),
         ],
       ),
     );

@@ -21,7 +21,9 @@ class PickedImage {
   bool get isAllowedType {
     if (allowedTypes.contains(mimeType)) return true;
     final lower = name.toLowerCase();
-    return lower.endsWith('.jpg') || lower.endsWith('.jpeg') || lower.endsWith('.png');
+    return lower.endsWith('.jpg') ||
+        lower.endsWith('.jpeg') ||
+        lower.endsWith('.png');
   }
 
   bool get isValid => isAllowedType && size <= maxBytes;

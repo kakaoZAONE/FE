@@ -146,7 +146,11 @@ class _ConsentDialogState extends State<_ConsentDialog> {
                         borderRadius: BorderRadius.circular(3),
                       ),
                       child: _checked
-                          ? const Icon(Icons.check, size: 14, color: Colors.white)
+                          ? const Icon(
+                              Icons.check,
+                              size: 14,
+                              color: Colors.white,
+                            )
                           : null,
                     ),
                   ),
@@ -171,7 +175,9 @@ class _ConsentDialogState extends State<_ConsentDialog> {
                     MouseRegion(
                       cursor: SystemMouseCursors.click,
                       child: GestureDetector(
-                        onTap: () => Navigator.of(context).pushNamed(AppRoutes.dataPolicy),
+                        onTap: () => Navigator.of(
+                          context,
+                        ).pushNamed(AppRoutes.dataPolicy),
                         child: Text(
                           '자세한 내용은 개인정보처리방침에서 확인할 수 있습니다.',
                           style: AppTextStyles.body13.copyWith(
@@ -340,7 +346,10 @@ class _AnalyzingDialogState extends State<_AnalyzingDialog>
                           colors: [Color(0x00A58BFF), Color(0x80A58BFF)],
                         ),
                         border: Border(
-                          bottom: BorderSide(color: Color(0xFF7B5CE0), width: 3),
+                          bottom: BorderSide(
+                            color: Color(0xFF7B5CE0),
+                            width: 3,
+                          ),
                         ),
                       ),
                     ),
@@ -429,7 +438,8 @@ class _AnalyzingDialogState extends State<_AnalyzingDialog>
             FillButton(
               label: '중단하기',
               muted: true,
-              onPressed: () => Navigator.of(context).pop(const AnalysisStopped()),
+              onPressed: () =>
+                  Navigator.of(context).pop(const AnalysisStopped()),
             ),
         ],
       ),
@@ -566,7 +576,10 @@ class _EditInfoDialogState extends State<_EditInfoDialog> {
           ),
           if (!widget.input) ...[
             const SizedBox(height: 20),
-            Text('ai 추정', style: AppTextStyles.body13.copyWith(fontSize: 11, color: purple)),
+            Text(
+              'ai 추정',
+              style: AppTextStyles.body13.copyWith(fontSize: 11, color: purple),
+            ),
             const SizedBox(height: 8),
             Container(
               height: 43,

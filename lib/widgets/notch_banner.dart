@@ -19,7 +19,11 @@ class NotchBanner extends StatelessWidget {
     required this.body,
     required this.action,
     this.dark = false,
+    this.minHeight = 314,
   });
+
+  /// 마스크 그룹 높이. 배경이 내용 높이만큼인 화면(A4 Contact 289)은 0.
+  final double minHeight;
 
   final String eyebrow;
   final String title;
@@ -41,7 +45,7 @@ class NotchBanner extends StatelessWidget {
         notchDepth: 47.4068,
       ),
       child: Container(
-        constraints: const BoxConstraints(minHeight: 314),
+        constraints: BoxConstraints(minHeight: minHeight),
         color: dark ? AppColors.dune : AppColors.gray50,
         child: Stack(
           children: [
